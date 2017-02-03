@@ -1,0 +1,28 @@
+{
+  "name": "juke",
+  "version": "1.0.0",
+  "description": "Game Engine experiment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack -w && webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minajevs/Juke.git"
+  },
+  "author": "Dmitrijs Minajevs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minajevs/Juke/issues"
+  },
+  "homepage": "https://github.com/minajevs/Juke#readme",
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.0.0-beta.18",
+    "html-webpack-plugin": "^2.28.0",
+    "source-map-loader": "^0.1.6",
+    "typescript": "^2.1.5",
+    "webpack": "^2.1.0-beta.22",
+    "webpack-dev-server": "^2.1.0-beta.8"
+  }
+}
