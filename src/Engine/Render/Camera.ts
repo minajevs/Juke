@@ -1,13 +1,15 @@
 import Tools from "../Tools/Tools";
 import GameObject, {IGameObjectOptions} from "../Physics/GameObject";
-import Render from "../Render/Render";
+import Render, {IDebugOptions} from "../Render/Render";
 import Vector from "../Physics/Vector";
+import Rect from "../Physics/Rect";
 import TestGameObject from "../../TestGameObject";
 import Keyboard from "../Controls/Keyboard";
 
 interface ICameraOptions extends IGameObjectOptions{
     render?: Render;
     gameObjects: Array<GameObject>;
+    debug?:boolean;
 }
 
 
@@ -15,11 +17,13 @@ export default class Camera extends GameObject{
     private renderer:Render;
     private lastUpdate:number;
     private gameObjects:Array<GameObject> = [];
+    private debug:boolean = false;
     
     constructor(options?:ICameraOptions){
         super(options);  
         this.tag = "camera";
         this.renderer = options && options.render || new Render({h: this.h, w: this.w});
+        this.debug = options && options.debug || this.debug;
         this.gameObjects = options.gameObjects;
         console.log(this.gameObjects);     
     }
@@ -35,9 +39,20 @@ export default class Camera extends GameObject{
 
     render(object:GameObject){
         if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){
-            console.log(object);
             this.renderer.drawImage(object.sprite.src, object.sprite);
-            this.renderer.write({text:`${object.pos.x}:${object.pos.y}`, position: Vector._minus(object.pos, new Vector(0,10))});
+        }
+
+        if(this.debug && this.objectInView(object)){
+            let options:IDebugOptions = {rect: new Rect(), color:""};
+            if (object.sprite != null){
+                options.color = object.sprite.visible ?  "green" : "gray";
+                options.rect = object.sprite;
+                options.text = `x: ${object.sprite.pos.x} y:${object.sprite.pos.y}`;
+            } else {
+                options.color = object.renderable ? "blue" : "red";
+                options.rect = object.getRect();
+            }
+            this.renderer.debug(options);
         }
     }
 

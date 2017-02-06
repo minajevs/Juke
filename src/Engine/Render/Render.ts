@@ -14,6 +14,12 @@ interface IWriteOptions{
     position: Vector;
 }
 
+export interface IDebugOptions{
+    rect:Rect, 
+    color:string, 
+    text?:string
+}
+
 
 export default class Render{
     private ctx:CanvasRenderingContext2D;
@@ -27,6 +33,17 @@ export default class Render{
 
     public drawImage(resource:ImageResource, rect:Rect){
         this.ctx.drawImage(resource.res, rect.pos.x, rect.pos.y, rect.w, rect.h);
+    }
+
+    public debug(options:IDebugOptions){
+        this.ctx.beginPath();
+        this.ctx.lineWidth=1;
+        this.ctx.strokeStyle=options.color;
+        this.ctx.rect(options.rect.pos.x, options.rect.pos.y, options.rect.w, options.rect.h);
+        this.ctx.stroke();
+        if(options.text)
+            this.write({text: options.text, position: Vector._plus(options.rect.pos, new Vector(0,-5))});
+            
     }
 
     public clear(){

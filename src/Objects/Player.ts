@@ -13,10 +13,10 @@ export default class Player extends Juke.GameObject{
     }
 
     update(tick:number){
-        if(this.keyboard.isDown(Juke.Keyboard.UP))       this.pos.y -= 1;
-        if(this.keyboard.isDown(Juke.Keyboard.DOWN))     this.pos.y += 1;
-        if(this.keyboard.isDown(Juke.Keyboard.RIGHT))    this.pos.x += 1;
-        if(this.keyboard.isDown(Juke.Keyboard.LEFT))     this.pos.x -= 1;
+        if(this.keyboard.isDown(Juke.Keyboard.UP))       this.pos.y -= 5;
+        if(this.keyboard.isDown(Juke.Keyboard.DOWN))     this.pos.y += 5;
+        if(this.keyboard.isDown(Juke.Keyboard.RIGHT))    this.pos.x += 5;
+        if(this.keyboard.isDown(Juke.Keyboard.LEFT))     this.pos.x -= 5;
 
         this.sprite.pos = this.pos;
     }

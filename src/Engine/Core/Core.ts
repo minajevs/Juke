@@ -11,6 +11,7 @@ interface ICoreOptions {
     ctx?: CanvasRenderingContext2D;
     tickLength?: number;
     fps?: number;
+    debug?:boolean;
 }
 
 
@@ -24,14 +25,16 @@ export default class Core {
 
     private objects: Array<GameObject> = [];
 
+    debug:boolean = false;
     resources: Resources = new Resources();
     camera: Camera;
     keyboard: Keyboard;
 
     constructor(camera?:Camera, options?: ICoreOptions) {
         Tools.extend(this.options, options);
+        this.debug = options && options.debug || this.debug;
         this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT]);
-        this.camera = camera || new Camera({ pos: new Vector(0,0), w: 800, h: 600, gameObjects: this.objects });
+        this.camera = camera || new Camera({ pos: new Vector(0,0), w: 800, h: 600, gameObjects: this.objects, debug: this.debug });
     }
 
     public start(): void {
@@ -71,7 +74,7 @@ export default class Core {
     }
 
     private loop = (tick: number) => {
-        //this.requestId = window.requestAnimationFrame(this.loop);
+        this.requestId = window.requestAnimationFrame(this.loop);
 
         let now = Date.now();
         let elapsed = now - this.lastTick;
