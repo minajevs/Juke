@@ -5,7 +5,7 @@ export default class TestGameObject extends GameObject{
 
     constructor(){
         super();
-        this.position.x = 100;
-        this.position.y = 100;
+        this.pos.x = 100;
+        this.pos.y = 100;
     }
 }

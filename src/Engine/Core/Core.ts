@@ -1,9 +1,11 @@
+import Resources from './../Resources/Resources';
 import Render from "../Render/Render";
 import Tools from "../Tools/Tools";
 import Camera from "../Render/Camera";
 import GameObject from "../Physics/GameObject";
 import Vector from "../Physics/Vector";
 import Keyboard from "../Controls/Keyboard";
+import ImageResource from "../Resources/ImageResource";
 
 interface ICoreOptions {
     ctx?: CanvasRenderingContext2D;
@@ -18,15 +20,18 @@ export default class Core {
     private lastTick: number;
     private startTime: number;
     private totalFrames: number = 0;
+    private requestId:number;
 
     private objects: Array<GameObject> = [];
 
+    resources: Resources = new Resources();
+    camera: Camera;
     keyboard: Keyboard;
 
-    constructor(options?: ICoreOptions) {
+    constructor(camera?:Camera, options?: ICoreOptions) {
         Tools.extend(this.options, options);
-
-        this.init();
+        this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT]);
+        this.camera = camera || new Camera({ pos: new Vector(0,0), w: 800, h: 600, gameObjects: this.objects });
     }
 
     public start(): void {
@@ -35,25 +40,38 @@ export default class Core {
         this.loop(this.lastTick);
     }
 
+    public stop():void{ 
+        console.log(this.requestId);
+        
+        if(this.requestId){
+            window.cancelAnimationFrame(this.requestId)
+            this.requestId = null;
+        }
+    }
+
     public add(obj: GameObject): void {
         this.objects.push(obj);
     }
 
-    private init(): void {
-        this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT]);
-        this.objects.push(new Camera(this.keyboard, { position: new Vector(0, 0), width: 800, height: 600, gameObjects: this.objects }));
-
+    public init(): Promise<any>{
         console.log('fps:' + this.options.fps);
 
 
         var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
-
         this.fpsInterval = 1000 / this.options.fps;
+
+        let p = this.resources.loadAll();
+        p.then(res => {
+            this.start();
+        });
+
+        return p;
+
     }
 
     private loop = (tick: number) => {
-        window.requestAnimationFrame(this.loop);
+        //this.requestId = window.requestAnimationFrame(this.loop);
 
         let now = Date.now();
         let elapsed = now - this.lastTick;
@@ -75,5 +93,7 @@ export default class Core {
         for (let obj of this.objects) {
             obj.update(tick);
         }
+
+        this.camera.update(tick);
     }
 }

@@ -1,17 +1,30 @@
 import TestGameObject from './TestGameObject';
 import Player from "./Objects/Player";
-import Juke, {Vector} from "./Engine/Juke";
+import Juke, {Vector, Rect, Resources, ImageResource, Sprite, GameObject} from "./Engine/Juke";
+
+
 
 
 let a = new Juke.Core();
-let player = new Player({keyboard: a.keyboard, position: new Vector(100,100)});
+a.resources.add(new ImageResource({src: "../Assets/pika.png", name: "pikachu"}));
+
+let player = new Player({
+    keyboard: a.keyboard, 
+    pos: new Vector(100,100),
+    w: 100,
+    h: 100,
+    sprite: new Sprite({src: a.resources.getByName("pikachu")}),
+    renderable: true
+});
+
 a.add(player);
-//a.start();
 
+a.add(new GameObject({
+    pos: new Vector(200,200),
+    w: 100,
+    h: 100,
+    sprite: new Sprite({src: a.resources.getByName("pikachu")}),
+    renderable: true
+}));
 
-//a.start();
-//a.add(new TestGameObject());
-//let b = new TestGameObject();
-//b.position.x = 400;
-//a.add(b);
-//console.log("Sup");
+a.init();

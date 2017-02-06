@@ -15,14 +15,12 @@ export default class Camera extends GameObject{
     private renderer:Render;
     private lastUpdate:number;
     private gameObjects:Array<GameObject> = [];
-    keyboard:Keyboard;
     
-    constructor(keyboard:Keyboard, options?:ICameraOptions){
+    constructor(options?:ICameraOptions){
         super(options);  
         this.tag = "camera";
-        this.renderer = options && options.render || new Render({height: this.height, width: this.width});
+        this.renderer = options && options.render || new Render({h: this.h, w: this.w});
         this.gameObjects = options.gameObjects;
-        this.keyboard = keyboard;
         console.log(this.gameObjects);     
     }
 
@@ -36,17 +34,18 @@ export default class Camera extends GameObject{
     }
 
     render(object:GameObject){
-        if(object instanceof Camera) return;
-        else if (object instanceof TestGameObject){
-            this.renderer.write({
-                text: object.text,
-                position: Vector._minus(object.position, this.position)
-            });
+        if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){
+            console.log(object);
+            this.renderer.drawImage(object.sprite.src, object.sprite);
+            this.renderer.write({text:`${object.pos.x}:${object.pos.y}`, position: Vector._minus(object.pos, new Vector(0,10))});
         }
+    }
 
+    private objectInView(object:GameObject):boolean{
+        return this.intersects(object);
     }
 
     moveBy(pos:Vector){
-        this.position._plus(pos);
+        this.pos._plus(pos);
     }
 }
