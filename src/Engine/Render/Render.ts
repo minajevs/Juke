@@ -46,8 +46,9 @@ export default class Render{
             
     }
 
-    public clear(){
-        this.ctx.clearRect(0, 0, this.options.w, this.options.h);
+    public clear(rect?:Rect){
+        let clearRect = rect || new Rect({pos: new Vector(0,0), w: this.options.w, h: this.options.h});
+        this.ctx.clearRect(clearRect.pos.x, clearRect.pos.y, clearRect.w, clearRect.h);
     }
 
     public write(options:IWriteOptions){

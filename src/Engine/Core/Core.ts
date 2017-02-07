@@ -30,7 +30,7 @@ export default class Core {
     camera: Camera;
     keyboard: Keyboard;
 
-    constructor(camera?:Camera, options?: ICoreOptions) {
+    constructor(options?: ICoreOptions,camera?:Camera) {
         Tools.extend(this.options, options);
         this.debug = options && options.debug || this.debug;
         this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT]);
@@ -54,11 +54,12 @@ export default class Core {
 
     public add(obj: GameObject): void {
         this.objects.push(obj);
+        console.log(obj);
+        
     }
 
     public init(): Promise<any>{
         console.log('fps:' + this.options.fps);
-
 
         var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
@@ -88,15 +89,12 @@ export default class Core {
 
     //Updates state
     private update(tick: number) {
-        if (this.keyboard.isDown(Keyboard.UP)) {
-            console.log('up');
-
-        }
-
         for (let obj of this.objects) {
+            //this.camera.prepareUpdate(obj);
             obj.update(tick);
+            this.camera.updateObject(tick, obj);
         }
 
-        this.camera.update(tick);
+        //this.camera.update(tick);
     }
 }

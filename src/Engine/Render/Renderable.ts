@@ -12,7 +12,9 @@ export default class Renderable extends Rect{
     constructor(options?:IRenderableOptions){
         super(options);
         if(options){
-            this.visible = options.visible || this.visible;
+            this.visible = (options.visible != null) 
+                ? options.visible 
+                : this.visible;
             this.scale = options.scale || this.scale;
         }
     }

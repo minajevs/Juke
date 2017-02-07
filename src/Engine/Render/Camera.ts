@@ -37,10 +37,31 @@ export default class Camera extends GameObject{
         }
     }
 
-    render(object:GameObject){
-        if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){
-            this.renderer.drawImage(object.sprite.src, object.sprite);
+    updateObject(tick:number, object:GameObject){
+        if(this.lastUpdate != tick){
+            this.lastUpdate = tick;
+            this.renderer.clear();           
         }
+        this.render(object);
+
+    }
+
+    prepareUpdate(object:GameObject){
+        let clearRect = object.getRect();
+        if(this.debug) {
+            clearRect.pos = Vector._minus(clearRect.pos, new Vector(1,12));
+            clearRect.w += 2;
+            clearRect.h += 13;
+        }
+        this.renderer.clear(clearRect);
+    }
+
+    render(object:GameObject){
+        if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){        
+            console.log(object.sprite);
+                
+            this.renderer.drawImage(object.sprite.src, object.sprite);
+        } 
 
         if(this.debug && this.objectInView(object)){
             let options:IDebugOptions = {rect: new Rect(), color:""};
