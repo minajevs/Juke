@@ -33,3 +33,15 @@ describe("Test custom Core constructors", () => {
         chai.assert.isFalse(emptyOptionsAndEmptyCameraCore.debug); 
     });
 })
+
+describe("Test Core options", () => {
+    let emptyOptionsAndEmptyCameraCore = new Core(undefined, undefined);
+    let defaultCore = new Core();
+    it("Empty camera Core is set up", () => {
+        chai.assert.isNotNull(emptyOptionsAndEmptyCameraCore.camera); 
+        chai.assert.instanceOf(emptyOptionsAndEmptyCameraCore.camera, Camera);   
+    });
+    it("Empty options Core is set up", () => {
+        chai.assert.isFalse(emptyOptionsAndEmptyCameraCore.debug); 
+    });
+})

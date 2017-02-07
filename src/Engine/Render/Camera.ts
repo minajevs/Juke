@@ -5,10 +5,11 @@ import Vector from "../Physics/Vector";
 import Rect from "../Physics/Rect";
 import TestGameObject from "../../TestGameObject";
 import Keyboard from "../Controls/Keyboard";
+import Objects from "../Core/Objects";
 
 interface ICameraOptions extends IGameObjectOptions{
     render?: Render;
-    gameObjects: Array<GameObject>;
+    gameObjects: Objects;
     debug?:boolean;
 }
 
@@ -16,7 +17,7 @@ interface ICameraOptions extends IGameObjectOptions{
 export default class Camera extends GameObject{
     private renderer:Render;
     private lastUpdate:number;
-    private gameObjects:Array<GameObject> = [];
+    private gameObjects:Objects;
     private debug:boolean = false;
     
     constructor(options?:ICameraOptions){
@@ -32,7 +33,7 @@ export default class Camera extends GameObject{
         this.lastUpdate = tick;
         this.renderer.clear();
 
-        for(let obj of this.gameObjects){
+        for(let obj of this.gameObjects.get()){
             this.render(obj);
         }
     }
@@ -58,8 +59,6 @@ export default class Camera extends GameObject{
 
     render(object:GameObject){
         if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){        
-            console.log(object.sprite);
-                
             this.renderer.drawImage(object.sprite.src, object.sprite);
         } 
 

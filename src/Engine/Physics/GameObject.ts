@@ -2,17 +2,26 @@ import Vector from "./Vector";
 import Rect, {IRectOptions} from "./Rect";
 import Sprite from "../Render/Sprite";
 
+export enum EnumLayer{
+    default     =   0,
+    background  =   1,
+    ground      =   2,
+    foreground  =   3,
+    special     =   4
+}
+
 export interface IGameObjectOptions extends IRectOptions{
     tag?:string;
     renderable?:boolean;
     sprite?:Sprite;
-    spriteName?:string; //TODO: implement sprite resolving by it's name
+    layer?:EnumLayer;
 }
 
 export default class GameObject extends Rect{
     tag:string = undefined;
     renderable:boolean = false;
     sprite:Sprite; //TODO: add some default sprite
+    layer:EnumLayer = 0;
 
     constructor(options?:IGameObjectOptions){
         super(options);
@@ -25,6 +34,7 @@ export default class GameObject extends Rect{
             }
             this.tag = options.tag || this.tag;
             this.renderable = options.renderable || this.renderable;
+            this.layer = options.layer || this.layer;
         }
     }
 

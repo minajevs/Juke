@@ -6,6 +6,7 @@ import GameObject from "../Physics/GameObject";
 import Vector from "../Physics/Vector";
 import Keyboard from "../Controls/Keyboard";
 import ImageResource from "../Resources/ImageResource";
+import Objects from "./Objects";
 
 interface ICoreOptions {
     ctx?: CanvasRenderingContext2D;
@@ -23,7 +24,7 @@ export default class Core {
     private totalFrames: number = 0;
     private requestId:number;
 
-    private objects: Array<GameObject> = [];
+    private objects: Objects = new Objects();
 
     debug:boolean = false;
     resources: Resources = new Resources();
@@ -53,7 +54,7 @@ export default class Core {
     }
 
     public add(obj: GameObject): void {
-        this.objects.push(obj);
+        this.objects.add(obj);
         console.log(obj);
         
     }
@@ -89,12 +90,12 @@ export default class Core {
 
     //Updates state
     private update(tick: number) {
-        for (let obj of this.objects) {
-            //this.camera.prepareUpdate(obj);
-            obj.update(tick);
-            this.camera.updateObject(tick, obj);
+        for(let i = 0; i < this.objects.layerCount; i++){
+            let layer = this.objects.get(i);
+            for(let obj of layer){
+                obj.update(tick);
+                this.camera.updateObject(tick, obj);
+            }
         }
-
-        //this.camera.update(tick);
     }
 }

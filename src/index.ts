@@ -14,7 +14,8 @@ let player = new Player({
     w: 100,
     h: 100,
     sprite: new Sprite({src: a.resources.getByName("pikachu")}),
-    renderable: true
+    renderable: true,
+    layer:1
 });
 
 a.add(player);
@@ -23,7 +24,7 @@ a.add(new GameObject({
     pos: new Vector(200,200),
     w: 100,
     h: 100,
-    sprite: new Sprite({src: a.resources.getByName("pikachu"), visible: false}),
+    sprite: new Sprite({src: a.resources.getByName("pikachu")}),
     renderable: true
 }));
 
