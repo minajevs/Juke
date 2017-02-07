@@ -32,10 +32,6 @@ export default class Camera extends GameObject{
     update(tick:number){
         this.lastUpdate = tick;
         this.renderer.clear();
-
-        for(let obj of this.gameObjects.get()){
-            this.render(obj);
-        }
     }
 
     updateObject(tick:number, object:GameObject){
@@ -78,9 +74,5 @@ export default class Camera extends GameObject{
 
     private objectInView(object:GameObject):boolean{
         return this.intersects(object);
-    }
-
-    moveBy(pos:Vector){
-        this.pos._plus(pos);
     }
 }

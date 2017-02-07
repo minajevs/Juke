@@ -45,4 +45,13 @@ export default class GameObject extends Rect{
     getRect():Rect{
         return new Rect({pos: this.pos, w: this.w, h: this.h});
     }
+
+    moveBy(pos:Vector){
+        this.pos._plus(pos);
+    }
+
+    moveTo(pos:Vector){
+        this.pos.x = pos.x;
+        this.pos.y = pos.y;
+    }
 }

@@ -15,7 +15,9 @@ export default class Rect{
     //Top-left coordinates
     pos:Vector = new Vector(0,0);
     //Bottom-right coordinates
-    readonly pos2:Vector = new Vector(0,0);
+    get pos2():Vector {return Vector._plus(this.pos, new Vector(this.w, this.h))}
+    get center():Vector {return Vector._plus(this.pos, new Vector(this.w/2, this.h/2))}
+    set center(value:Vector) {this.pos.x = value.x-(this.w/2); this.pos.y = value.y-(this.h/2)}
     
     constructor(options?:IRectOptions){
         if(options){
@@ -23,7 +25,6 @@ export default class Rect{
             this.h = options.h || this.h;
             this.pos = options.pos || this.pos;
         }
-        this.pos2 = Vector._plus(this.pos, new Vector(this.w, this.h));
     }
 
     intersects(rect:Rect):boolean{
@@ -32,4 +33,5 @@ export default class Rect{
                 this.pos.y > rect.pos2.y ||
                 this.pos2.y < rect.pos.y)
     }
+
 }

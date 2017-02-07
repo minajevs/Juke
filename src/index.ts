@@ -10,6 +10,7 @@ a.resources.add(new ImageResource({src: "../Assets/pika.png", name: "pikachu"}))
 
 let player = new Player({
     keyboard: a.keyboard, 
+    camera: a.camera,
     pos: new Vector(100,100),
     w: 100,
     h: 100,
