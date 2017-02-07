@@ -1,6 +1,7 @@
 import Vector from "./Vector";
 import Rect, {IRectOptions} from "./Rect";
 import Sprite from "../Render/Sprite";
+import Tools from "../Tools/Tools";
 
 export enum EnumLayer{
     default     =   0,
@@ -25,16 +26,12 @@ export default class GameObject extends Rect{
 
     constructor(options?:IGameObjectOptions){
         super(options);
-        if(options){
-            if(options.sprite){
+        Tools.extend(this, options);
+        if(options && options.sprite){
                 this.sprite = options.sprite;
                 this.sprite.pos = this.pos;
                 this.sprite.w = this.w;
                 this.sprite.h = this.h;
-            }
-            this.tag = options.tag || this.tag;
-            this.renderable = options.renderable || this.renderable;
-            this.layer = options.layer || this.layer;
         }
     }
 

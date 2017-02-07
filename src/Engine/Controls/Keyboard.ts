@@ -3,6 +3,7 @@ export default class Keyboard{
     static RIGHT: number = 39;
     static UP: number = 38;
     static DOWN: number = 40;
+    static SPACE: number = 32;
 
     private keys:{[keyCode:number] : boolean} = {};
 

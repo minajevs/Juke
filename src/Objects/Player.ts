@@ -20,6 +20,8 @@ export default class Player extends Juke.GameObject{
         if(this.keyboard.isDown(Juke.Keyboard.DOWN))     this.pos.y += 5;
         if(this.keyboard.isDown(Juke.Keyboard.RIGHT))    this.pos.x += 5;
         if(this.keyboard.isDown(Juke.Keyboard.LEFT))     this.pos.x -= 5;
+        if(this.keyboard.isDown(Juke.Keyboard.SPACE))    console.log(this);
+        
 
         this.sprite.pos = this.pos;
         this.camera.center = this.center;

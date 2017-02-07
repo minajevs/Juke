@@ -33,8 +33,8 @@ export default class Core {
 
     constructor(options?: ICoreOptions,camera?:Camera) {
         Tools.extend(this.options, options);
-        this.debug = options && options.debug || this.debug;
-        this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT]);
+        Tools.extend(this, options);
+        this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
         this.camera = camera || new Camera({ pos: new Vector(0,0), w: 800, h: 600, gameObjects: this.objects, debug: this.debug });
     }
 

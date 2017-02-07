@@ -9,7 +9,7 @@ interface ISpriteOptions extends IRenderableOptions{
 export default class Sprite extends Renderable{
     src:ImageResource;
     name:string;
-
+    
     constructor(options:ISpriteOptions){
         super(options);
         if(options){

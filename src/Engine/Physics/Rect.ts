@@ -20,11 +20,7 @@ export default class Rect{
     set center(value:Vector) {this.pos.x = value.x-(this.w/2); this.pos.y = value.y-(this.h/2)}
     
     constructor(options?:IRectOptions){
-        if(options){
-            this.w = options.w || this.w;
-            this.h = options.h || this.h;
-            this.pos = options.pos || this.pos;
-        }
+        Tools.extend(this, options)
     }
 
     intersects(rect:Rect):boolean{

@@ -23,10 +23,8 @@ export default class Camera extends GameObject{
     constructor(options?:ICameraOptions){
         super(options);  
         this.tag = "camera";
-        this.renderer = options && options.render || new Render({h: this.h, w: this.w});
-        this.debug = options && options.debug || this.debug;
-        this.gameObjects = options.gameObjects;
-        console.log(this.gameObjects);     
+        Tools.extend(this, options);
+        this.renderer = this.renderer || new Render({h: this.h, w: this.w});    
     }
 
     update(tick:number){
@@ -54,19 +52,20 @@ export default class Camera extends GameObject{
     }
 
     render(object:GameObject){
-        if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){        
-            this.renderer.drawImage(object.sprite.src, object.sprite);
+        if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){  
+            let drawRect = new Rect({pos: Vector._minus(object.sprite.pos, this.pos), w: object.sprite.w, h: object.sprite.h});     
+            this.renderer.drawImage(object.sprite.src, drawRect);
         } 
 
         if(this.debug && this.objectInView(object)){
             let options:IDebugOptions = {rect: new Rect(), color:""};
             if (object.sprite != null){
                 options.color = object.sprite.visible ?  "green" : "gray";
-                options.rect = object.sprite;
+                options.rect = new Rect({pos: Vector._minus(object.sprite.pos, this.pos), w: object.sprite.w, h: object.sprite.h});
                 options.text = `x: ${object.sprite.pos.x} y:${object.sprite.pos.y}`;
             } else {
                 options.color = object.renderable ? "blue" : "red";
-                options.rect = object.getRect();
+                options.rect = new Rect({pos: Vector._minus(object.getRect().pos, this.pos), w: object.getRect().w, h: object.getRect().h});
             }
             this.renderer.debug(options);
         }

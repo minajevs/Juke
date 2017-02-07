@@ -16,6 +16,15 @@ export default class Vector{
         return new Vector(vector1.x+vector2.x, vector1.y+vector2.y);
     }
 
+    _divide(vector:Vector){
+        this.x /= vector.x;
+        this.y /= vector.y;
+    }
+
+    static _center(vector1:Vector) : Vector{
+        return new Vector(vector1.x/2, vector1.y/2);
+    }
+
     _minus(vector:Vector){
         this.x -= vector.x;
         this.y -= vector.y;
