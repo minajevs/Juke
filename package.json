@@ -13,9 +13,6 @@
   },
   "author": "Dmitrijs Minajevs @minajevs",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/minajevs/Juke/issues"
-  },
   "homepage": "https://github.com/minajevs/Juke#readme",
   "devDependencies": {
     "@types/chai": "^3.4.34",
