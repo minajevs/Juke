@@ -2,6 +2,8 @@ import Vector from "./Vector";
 import Rect, {IRectOptions} from "./Rect";
 import Sprite from "../Render/Sprite";
 import Tools from "../Tools/Tools";
+import Core from "../Core/Core";
+import Tick from "../Core/Tick";
 
 export enum EnumLayer{
     default     =   0,
@@ -16,6 +18,7 @@ export interface IGameObjectOptions extends IRectOptions{
     renderable?:boolean;
     sprite?:Sprite;
     layer?:EnumLayer;
+    collider?:Rect;
 }
 
 export default class GameObject extends Rect{
@@ -23,19 +26,19 @@ export default class GameObject extends Rect{
     renderable:boolean = false;
     sprite:Sprite; //TODO: add some default sprite
     layer:EnumLayer = 0;
+    collider: Rect;
 
     constructor(options?:IGameObjectOptions){
         super(options);
         Tools.extend(this, options);
-        if(options && options.sprite){
-                this.sprite = options.sprite;
-                this.sprite.pos = this.pos;
-                this.sprite.w = this.w;
-                this.sprite.h = this.h;
+        if(this.sprite){
+            this.sprite.pos = this.pos;
+            this.sprite.w = this.w;
+            this.sprite.h = this.h;
         }
     }
 
-    update(tick:number){
+    update(tick:Tick){
 
     }
 
@@ -45,10 +48,11 @@ export default class GameObject extends Rect{
 
     moveBy(pos:Vector){
         this.pos._plus(pos);
+        //if(this.collider) this.collider.pos._plus(pos);
     }
 
     moveTo(pos:Vector){
-        this.pos.x = pos.x;
-        this.pos.y = pos.y;
+        let delta = Vector._minus(pos, this.pos);
+        this.moveBy(delta);
     }
 }

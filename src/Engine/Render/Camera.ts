@@ -6,10 +6,11 @@ import Rect from "../Physics/Rect";
 import TestGameObject from "../../TestGameObject";
 import Keyboard from "../Controls/Keyboard";
 import Objects from "../Core/Objects";
+import Tick from "../Core/Tick"; 
 
 interface ICameraOptions extends IGameObjectOptions{
     render?: Render;
-    gameObjects: Objects;
+    gameObjects?: Objects;
     debug?:boolean;
 }
 
@@ -17,8 +18,8 @@ interface ICameraOptions extends IGameObjectOptions{
 export default class Camera extends GameObject{
     private renderer:Render;
     private lastUpdate:number;
-    private gameObjects:Objects;
-    private debug:boolean = false;
+    gameObjects:Objects;
+    debug:boolean = false;
     
     constructor(options?:ICameraOptions){
         super(options);  
@@ -27,14 +28,14 @@ export default class Camera extends GameObject{
         this.renderer = this.renderer || new Render({h: this.h, w: this.w});    
     }
 
-    update(tick:number){
-        this.lastUpdate = tick;
+    update(tick:Tick){
+        this.lastUpdate = tick.tick;
         this.renderer.clear();
     }
 
-    updateObject(tick:number, object:GameObject){
-        if(this.lastUpdate != tick){
-            this.lastUpdate = tick;
+    updateObject(tick:Tick, object:GameObject){
+        if(this.lastUpdate != tick.tick){
+            this.lastUpdate = tick.tick;
             this.renderer.clear();           
         }
         this.render(object);
@@ -58,16 +59,22 @@ export default class Camera extends GameObject{
         } 
 
         if(this.debug && this.objectInView(object)){
-            let options:IDebugOptions = {rect: new Rect(), color:""};
+            let objectOptions:IDebugOptions = {rect: new Rect(), color:""};
             if (object.sprite != null){
-                options.color = object.sprite.visible ?  "green" : "gray";
-                options.rect = new Rect({pos: Vector._minus(object.sprite.pos, this.pos), w: object.sprite.w, h: object.sprite.h});
-                options.text = `x: ${object.sprite.pos.x} y:${object.sprite.pos.y}`;
+                objectOptions.color = object.sprite.visible ?  "green" : "gray";
+                objectOptions.rect = new Rect({pos: Vector._minus(object.sprite.pos, this.pos), w: object.sprite.w, h: object.sprite.h});
+                objectOptions.text = `x: ${object.sprite.pos.x} y:${object.sprite.pos.y}`;
             } else {
-                options.color = object.renderable ? "blue" : "red";
-                options.rect = new Rect({pos: Vector._minus(object.getRect().pos, this.pos), w: object.getRect().w, h: object.getRect().h});
+                objectOptions.color = object.renderable ? "blue" : "red";
+                objectOptions.rect = new Rect({pos: Vector._minus(object.getRect().pos, this.pos), w: object.getRect().w, h: object.getRect().h});
             }
-            this.renderer.debug(options);
+            this.renderer.debug(objectOptions);
+            if(object.collider){
+                let colliderOptions:IDebugOptions = {
+                    rect: new Rect({pos: Vector._minus(object.collider.pos, this.pos), w: object.collider.w, h: object.collider.h}), 
+                    color:"red"};
+                this.renderer.debug(colliderOptions);
+            }
         }
     }
 

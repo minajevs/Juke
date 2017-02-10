@@ -7,12 +7,17 @@ import Vector from "../Physics/Vector";
 import Keyboard from "../Controls/Keyboard";
 import ImageResource from "../Resources/ImageResource";
 import Objects from "./Objects";
+import Collider from "../Physics/Collider";
+import Tick from "./Tick";
+
 
 interface ICoreOptions {
     ctx?: CanvasRenderingContext2D;
     tickLength?: number;
     fps?: number;
     debug?:boolean;
+    camera?: Camera;
+    collider?: Collider;
 }
 
 
@@ -28,14 +33,18 @@ export default class Core {
 
     debug:boolean = false;
     resources: Resources = new Resources();
-    camera: Camera;
+    camera: Camera = new Camera({ pos: new Vector(0,0), w: 800, h: 600});
     keyboard: Keyboard;
+    collider: Collider = new Collider();
 
-    constructor(options?: ICoreOptions,camera?:Camera) {
+    constructor(options?: ICoreOptions) {
         Tools.extend(this.options, options);
         Tools.extend(this, options);
+
         this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
-        this.camera = camera || new Camera({ pos: new Vector(0,0), w: 800, h: 600, gameObjects: this.objects, debug: this.debug });
+        this.camera.gameObjects = this.objects; 
+        this.camera.debug = this.debug 
+
     }
 
     public start(): void {
@@ -45,8 +54,6 @@ export default class Core {
     }
 
     public stop():void{ 
-        console.log(this.requestId);
-        
         if(this.requestId){
             window.cancelAnimationFrame(this.requestId)
             this.requestId = null;
@@ -83,16 +90,20 @@ export default class Core {
         if (elapsed > this.fpsInterval) {
             this.lastTick = now - (elapsed % this.fpsInterval);
         }
-
-
-        this.update(tick);
+        let internalTick = new Tick(tick);
+        this.update(internalTick);
     }
 
     //Updates state
-    private update(tick: number) {
+    private update(tick: Tick) {
+        //Update self
+        this.collider.objects = this.objects;
+
+        //Update objects
         for(let i = 0; i < this.objects.layerCount; i++){
             let layer = this.objects.get(i);
             for(let obj of layer){
+                tick.collisions = this.collider.collisions(obj);
                 obj.update(tick);
                 this.camera.updateObject(tick, obj);
             }

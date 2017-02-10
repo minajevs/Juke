@@ -1,4 +1,5 @@
 import Rect, {IRectOptions} from "../Physics/Rect";
+import Tools from '../Tools/Tools';
 
 export interface IRenderableOptions extends IRectOptions{
     visible?:boolean;
@@ -11,11 +12,6 @@ export default class Renderable extends Rect{
 
     constructor(options?:IRenderableOptions){
         super(options);
-        if(options){
-            this.visible = (options.visible != null) 
-                ? options.visible 
-                : this.visible;
-            this.scale = options.scale || this.scale;
-        }
+        Tools.extend(this,options);
     }
 }

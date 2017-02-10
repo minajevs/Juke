@@ -1,4 +1,5 @@
 import {IResource, ResourceType} from "./Resource";
+import Tools from "../Tools/Tools";
 
 export interface IImageResourceOptions{
     name:string;
@@ -14,6 +15,8 @@ export default class ImageResource implements IResource{
     loaded:boolean;
 
     constructor(options:IImageResourceOptions){
+        //TODO: investigate why this doesn't work
+        //Tools.extend(this, options);
         this.src = options.src;
         this.name = options.name;
         this.type = ResourceType.Image;

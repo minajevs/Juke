@@ -1,4 +1,5 @@
 import { IResource } from "./Resource";
+import Tools from "../Tools/Tools";
 
 interface IResourcesOptions {
     name?: string;
@@ -14,9 +15,7 @@ export default class Resources {
                 this.add(res);
             }
         }
-        if (options) {
-            this.name = options.name || this.name;
-        }
+        Tools.extend(this, options);
         return this;
     }
 

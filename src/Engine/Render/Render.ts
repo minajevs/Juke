@@ -24,11 +24,12 @@ export interface IDebugOptions{
 export default class Render{
     private ctx:CanvasRenderingContext2D;
     private lastRender:number;
-    private options:IRenderOptions = {w: 800, h: 600};
+    private w:number = 800;
+    private h:number = 600;
 
     constructor(options?:IRenderOptions){
-        Tools.extend(this.options, options);
-        this.ctx = this.options.ctx || this.CreateCanvas();
+        Tools.extend(this, options);
+        this.ctx = this.ctx || this.CreateCanvas();
     }
 
     public drawImage(resource:ImageResource, rect:Rect){
@@ -47,7 +48,7 @@ export default class Render{
     }
 
     public clear(rect?:Rect){
-        let clearRect = rect || new Rect({pos: new Vector(0,0), w: this.options.w, h: this.options.h});
+        let clearRect = rect || new Rect({pos: new Vector(0,0), w: this.w, h: this.h});
         this.ctx.clearRect(clearRect.pos.x, clearRect.pos.y, clearRect.w, clearRect.h);
     }
 
@@ -58,8 +59,8 @@ export default class Render{
     private CreateCanvas() : CanvasRenderingContext2D{
         let canvas = document.createElement('canvas');
         canvas.id = 'GameCanvas',
-        canvas.width = this.options.w,
-        canvas.height = this.options.h,
+        canvas.width = this.w,
+        canvas.height = this.h,
         canvas.style.border = "1px solid";
         document.body.appendChild(canvas);
         return canvas.getContext('2d');
