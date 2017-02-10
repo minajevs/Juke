@@ -31,12 +31,17 @@ export default class Camera extends GameObject{
     update(tick:Tick){
         this.lastUpdate = tick.tick;
         this.renderer.clear();
+        if(this.debug){
+            let options:IDebugOptions = {rect: 
+                new Rect({pos: Vector._minus(this.collider.pos, this.pos), w: this.collider.w, h: this.collider.h}),
+                color:"black"};
+            this.renderer.debug(options);
+        }
     }
 
     updateObject(tick:Tick, object:GameObject){
         if(this.lastUpdate != tick.tick){
-            this.lastUpdate = tick.tick;
-            this.renderer.clear();           
+            this.update(tick);          
         }
         this.render(object);
 

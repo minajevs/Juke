@@ -18,6 +18,8 @@ interface ICoreOptions {
     debug?:boolean;
     camera?: Camera;
     collider?: Collider;
+    w?: number;
+    h?: number;
 }
 
 
@@ -35,7 +37,7 @@ export default class Core {
     resources: Resources = new Resources();
     camera: Camera = new Camera({ pos: new Vector(0,0), w: 800, h: 600});
     keyboard: Keyboard;
-    collider: Collider = new Collider();
+    collider: Collider = new Collider({pos: new Vector(0,0)});
 
     constructor(options?: ICoreOptions) {
         Tools.extend(this.options, options);
@@ -43,8 +45,10 @@ export default class Core {
 
         this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
         this.camera.gameObjects = this.objects; 
-        this.camera.debug = this.debug 
-
+        this.camera.debug = this.debug;
+        this.camera.collider = this.collider;
+        this.collider.w = this.camera.w;
+        this.collider.h = this.camera.h;
     }
 
     public start(): void {
@@ -61,14 +65,10 @@ export default class Core {
     }
 
     public add(obj: GameObject): void {
-        this.objects.add(obj);
-        console.log(obj);
-        
+        this.objects.add(obj);       
     }
 
     public init(): Promise<any>{
-        console.log('fps:' + this.options.fps);
-
         var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         this.fpsInterval = 1000 / this.options.fps;
@@ -79,7 +79,6 @@ export default class Core {
         });
 
         return p;
-
     }
 
     private loop = (tick: number) => {
@@ -98,7 +97,7 @@ export default class Core {
     private update(tick: Tick) {
         //Update self
         this.collider.objects = this.objects;
-
+        //this.camera.update(tick);
         //Update objects
         for(let i = 0; i < this.objects.layerCount; i++){
             let layer = this.objects.get(i);
