@@ -17,7 +17,5 @@ describe("Test Objects constructor", () => {
     });
     it("Can get all objects", () => {
         chai.assert.isTrue(objects.get().length === 3);       
-    });
-
-            
+    });         
 })

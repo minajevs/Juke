@@ -7,7 +7,7 @@ import Vector from "../Physics/Vector";
 import Keyboard from "../Controls/Keyboard";
 import ImageResource from "../Resources/ImageResource";
 import Objects from "./Objects";
-import Collider from "../Physics/Collider";
+import SpatialMap from "../Physics/SpatialMap";
 import Tick from "./Tick";
 
 
@@ -15,9 +15,9 @@ interface ICoreOptions {
     ctx?: CanvasRenderingContext2D;
     tickLength?: number;
     fps?: number;
-    debug?:boolean;
+    debug?: boolean;
     camera?: Camera;
-    collider?: Collider;
+    spatialMap?: SpatialMap;
     w?: number;
     h?: number;
 }
@@ -29,26 +29,27 @@ export default class Core {
     private lastTick: number;
     private startTime: number;
     private totalFrames: number = 0;
-    private requestId:number;
-
+    private requestId: number;
     private objects: Objects = new Objects();
 
-    debug:boolean = false;
+    debug: boolean = false;
     resources: Resources = new Resources();
-    camera: Camera = new Camera({ pos: new Vector(0,0), w: 800, h: 600});
+    camera: Camera = new Camera({ pos: new Vector(0, 0), w: 800, h: 600 });
     keyboard: Keyboard;
-    collider: Collider = new Collider({pos: new Vector(0,0)});
+    spatialMap: SpatialMap = new SpatialMap({w: 10000, h: 10000, cellsize: 500});
 
     constructor(options?: ICoreOptions) {
         Tools.extend(this.options, options);
         Tools.extend(this, options);
 
         this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
-        this.camera.gameObjects = this.objects; 
+        this.camera.gameObjects = this.objects;
         this.camera.debug = this.debug;
-        this.camera.collider = this.collider;
-        this.collider.w = this.camera.w;
-        this.collider.h = this.camera.h;
+        this.spatialMap.debug = this.debug;
+        if(this.options.w && this.options.h){
+            this.spatialMap.w = this.options.w;
+            this.spatialMap.h = this.options.h;
+        }
     }
 
     public start(): void {
@@ -57,18 +58,19 @@ export default class Core {
         this.loop(this.lastTick);
     }
 
-    public stop():void{ 
-        if(this.requestId){
+    public stop(): void {
+        if (this.requestId) {
             window.cancelAnimationFrame(this.requestId)
             this.requestId = null;
         }
     }
 
     public add(obj: GameObject): void {
-        this.objects.add(obj);       
+        this.objects.add(obj);
+        this.spatialMap.add(obj);
     }
 
-    public init(): Promise<any>{
+    public init(): Promise<any> {
         var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         this.fpsInterval = 1000 / this.options.fps;
@@ -96,15 +98,18 @@ export default class Core {
     //Updates state
     private update(tick: Tick) {
         //Update self
-        this.collider.objects = this.objects;
-        //this.camera.update(tick);
+        //this.collider.objects = this.objects;
+        this.camera.update(tick);
         //Update objects
-        for(let i = 0; i < this.objects.layerCount; i++){
-            let layer = this.objects.get(i);
-            for(let obj of layer){
-                tick.collisions = this.collider.collisions(obj);
-                obj.update(tick);
-                this.camera.updateObject(tick, obj);
+        for (let i = 0; i < this.objects.layerCount; i++) {
+            if (this.objects.length(i) > 0) {
+                let layer = this.objects.get(i);
+                for (let obj of layer) {
+                    //tick.collisions = this.collider.collisions(obj);
+                    tick.bucket = this.spatialMap.getNearby(obj);
+                    obj.update(tick);
+                    this.camera.updateObject(tick, obj);
+                }
             }
         }
     }

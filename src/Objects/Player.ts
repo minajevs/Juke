@@ -13,19 +13,34 @@ export default class Player extends Juke.GameObject{
         super(options);
         this.keyboard = options.keyboard;
         this.camera = options.camera;
+        this.tag = "player";
     }
 
     update(tick:Juke.Tick){
-        if(this.keyboard.isDown(Juke.Keyboard.UP))       this.pos.y -= 5;
-        if(this.keyboard.isDown(Juke.Keyboard.DOWN))     this.pos.y += 5;
-        if(this.keyboard.isDown(Juke.Keyboard.RIGHT))    this.pos.x += 5;
-        if(this.keyboard.isDown(Juke.Keyboard.LEFT))     this.pos.x -= 5;
+        super.update(tick);
+
+        if(this.keyboard.isDown(Juke.Keyboard.UP))       this.move(-5, false);
+        if(this.keyboard.isDown(Juke.Keyboard.DOWN))     this.move(5, false);
+        if(this.keyboard.isDown(Juke.Keyboard.RIGHT))    this.move(5, true);
+        if(this.keyboard.isDown(Juke.Keyboard.LEFT))     this.move(-5, true);
         if(this.keyboard.isDown(Juke.Keyboard.SPACE))    console.log(this);
         
-        console.log(tick.collisions.length > 0);
-
         this.collider.pos = this.pos;
         this.sprite.pos = this.pos;
         this.camera.center = this.center;
+    }
+
+    private move(step:number, vertical:boolean){
+        if(vertical){
+            this.pos.x += step;
+            while((<Array<Juke.GameObject>>this.collides()).length > 0){
+                this.pos.x -= step/Math.abs(step);
+            }
+        } else {
+            this.pos.y += step;
+            while((<Array<Juke.GameObject>>this.collides()).length > 0){
+                this.pos.y -= step/Math.abs(step);
+            }
+        }
     }
 }

@@ -17,6 +17,10 @@ export default class Objects{
         this.objects[obj.layer].push(obj);       
     }
 
+    public length(layer?:EnumLayer):number{
+        return this.objects[layer].length;
+    }
+
     public get(layer?:EnumLayer):Array<GameObject>{
         if(layer != null && this.objects[layer] != null){
             return this.objects[layer];

@@ -16,6 +16,13 @@ export default class Rect{
     pos:Vector = new Vector(0,0);
     //Bottom-right coordinates
     get pos2():Vector {return Vector._plus(this.pos, new Vector(this.w, this.h))}
+    set pos2(value:Vector){
+        this.w = value.x - this.pos.x; 
+        this.h = value.y - this.pos.y;
+        console.log(this.w);
+    }
+    get area():number {return (this.pos2.x - this.pos.x) * (this.pos2.y - this.pos.y)}
+    get largeArea():number {return (this.pos2.x - this.pos.x) * (this.pos2.y - this.pos.y)}    
     get center():Vector {return Vector._plus(this.pos, new Vector(this.w/2, this.h/2))}
     set center(value:Vector) {this.pos.x = value.x-(this.w/2); this.pos.y = value.y-(this.h/2)}
     
@@ -29,5 +36,4 @@ export default class Rect{
                 this.pos.y > rect.pos2.y ||
                 this.pos2.y < rect.pos.y)
     }
-
 }

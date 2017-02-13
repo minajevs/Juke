@@ -19,8 +19,7 @@ export default class Camera extends GameObject{
     private renderer:Render;
     private lastUpdate:number;
     gameObjects:Objects;
-    debug:boolean = false;
-    
+    debug:boolean = false;    
     constructor(options?:ICameraOptions){
         super(options);  
         this.tag = "camera";
@@ -31,12 +30,6 @@ export default class Camera extends GameObject{
     update(tick:Tick){
         this.lastUpdate = tick.tick;
         this.renderer.clear();
-        if(this.debug){
-            let options:IDebugOptions = {rect: 
-                new Rect({pos: Vector._minus(this.collider.pos, this.pos), w: this.collider.w, h: this.collider.h}),
-                color:"black"};
-            this.renderer.debug(options);
-        }
     }
 
     updateObject(tick:Tick, object:GameObject){
