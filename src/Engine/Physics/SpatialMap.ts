@@ -78,7 +78,7 @@ export default class SpatialMap{
         let cellPos = (Math.floor(pos.x / this.cellsize)) + 
                         (Math.floor(pos.y / this.cellsize)) *
                         this.colCount;
-        if((cellPos-1) > this.colCount*this.rowCount ||cellPos < 0) return null;
+        if((cellPos+1) > this.colCount*this.rowCount ||cellPos < 0) return null;
         return cellPos;
     }
 

@@ -35,18 +35,18 @@ describe("Test SpatialMap bucket creation", () => {
         chai.assert.strictEqual((<any>map).getBucketId(v1), 0);
         chai.assert.strictEqual((<any>map).getBucketId(v2), 5);
         chai.assert.strictEqual((<any>map).getBucketId(v3), 4);
-        chai.assert.strictEqual((<any>map).getBucketId(v4), 40);
+        chai.assert.strictEqual((<any>map).getBucketId(v4), null);
     });          
      it("Bucket Ids are found correctly", () => {    
        let r1 = new Rect({pos: new Vector(0,0), pos2: new Vector(10,10)});
        let r2 = new Rect({pos: new Vector(0,0), pos2: new Vector(50,10)});
        let r3 = new Rect({pos: new Vector(30,30), pos2: new Vector(60,60)});
-       let r4 = new Rect({pos: new Vector(30,90), pos2: new Vector(90,100)});
+       let r4 = new Rect({pos: new Vector(70,90), pos2: new Vector(90,99)});
 
        chai.assert.deepEqual((<any>map).getBucketIds(r1), [0]);
        chai.assert.deepEqual((<any>map).getBucketIds(r2), [0,2]);
        chai.assert.deepEqual((<any>map).getBucketIds(r3), [5,10,9,6]);
-       chai.assert.deepEqual((<any>map).getBucketIds(r4), [13,19,17,15]);
+       chai.assert.deepEqual((<any>map).getBucketIds(r4), [14,15]);
     });  
 })
 

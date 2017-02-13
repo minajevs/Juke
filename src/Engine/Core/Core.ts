@@ -98,7 +98,6 @@ export default class Core {
     //Updates state
     private update(tick: Tick) {
         //Update self
-        //this.collider.objects = this.objects;
         this.camera.update(tick);
         //Update objects
         for (let i = 0; i < this.objects.layerCount; i++) {
