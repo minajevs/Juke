@@ -33,14 +33,16 @@ export default class Player extends Juke.GameObject{
     private move(step:number, vertical:boolean){
         if(vertical){
             this.pos.x += step;
-            while((<Array<Juke.GameObject>>this.collides()).length > 0){
-                this.pos.x -= step/Math.abs(step);
-            }
+            if((<Array<Juke.GameObject>>this.collides()).length > 0) this.pos.x -= step;
+            //while((<Array<Juke.GameObject>>this.collides()).length > 0){
+            //    this.pos.x -= step/Math.abs(step);
+            //}
         } else {
             this.pos.y += step;
-            while((<Array<Juke.GameObject>>this.collides()).length > 0){
-                this.pos.y -= step/Math.abs(step);
-            }
+            if((<Array<Juke.GameObject>>this.collides()).length > 0) this.pos.y -= step;
+            //while((<Array<Juke.GameObject>>this.collides()).length > 0){
+            //    this.pos.y -= step/Math.abs(step);
+            //}
         }
     }
 }

@@ -57,7 +57,8 @@ export default class GameObject extends Rect {
                     : this.collider.intersects(object.collider);
         } else {
             let ret = new Array<GameObject>();
-            for (let obj of this.tick.bucket) {
+            let nearObject = this.tick.map.getNearby(this);
+            for (let obj of nearObject) {
                 if(obj === this) continue;
                 if (this.collider.intersects(obj.collider)) {
                     ret.push(obj);
