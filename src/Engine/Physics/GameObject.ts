@@ -27,6 +27,7 @@ export default class GameObject extends Rect {
     sprite: Sprite; //TODO: add some default sprite
     layer: EnumLayer = 0;
     collider: Rect;
+    nearObjects: [Array<GameObject>, number] = [[], 0]
 
     tick: Tick;
 
@@ -48,23 +49,24 @@ export default class GameObject extends Rect {
         return new Rect({ pos: this.pos, w: this.w, h: this.h });
     }
 
-    collides(object?: GameObject): Array<GameObject> | boolean {
-        if (this.collider == null || this.tick == null) return false;
+    collides(object?: GameObject): [boolean, Array<GameObject>] {
+        if (this.collider == null || this.tick == null) return [false, null];
 
         if (object != null) {
             return object.collider == null 
-                    ? false
-                    : this.collider.intersects(object.collider);
+                    ? [false, null]
+                    : [this.collider.intersects(object.collider), null]
         } else {
             let ret = new Array<GameObject>();
-            let nearObject = this.tick.map.getNearby(this);
-            for (let obj of nearObject) {
+            if(this.nearObjects[1] != this.tick.tick) 
+                this.nearObjects = [this.tick.map.getNearby(this), this.tick.tick] //if nearobjects are not fresh - update
+            for (let obj of this.nearObjects[0]) {
                 if(obj === this) continue;
                 if (this.collider.intersects(obj.collider)) {
                     ret.push(obj);
                 }
             }
-            return ret;
+            return [ret.length > 0,ret];
         }
     }
 

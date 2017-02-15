@@ -5,7 +5,7 @@ import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject } from
 
 
 
-let a = new Juke.Core({ debug: true });
+let a = new Juke.Core({ debug: false });
 a.resources.add(new ImageResource({ src: "../Assets/pika.png", name: "pikachu" }));
 a.resources.add(new ImageResource({ src: "../Assets/barrel.png", name: "barrel" }));
 

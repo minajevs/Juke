@@ -36,4 +36,8 @@ export default class Rect{
                 this.pos.y > rect.pos2.y ||
                 this.pos2.y < rect.pos.y)
     }
+
+    //touches(rect:Rect):Tuple{
+    //    return {true, 1}
+    //}
 }
