@@ -12,6 +12,7 @@ import Keyboard from "./Controls/Keyboard";
 import Resources from "./Resources/Resources";
 import {IResource} from "./Resources/Resource";
 import ImageResource from "./Resources/ImageResource";
+import Spritesheet from "./Resources/Spritesheet";
 //Render
 import Sprite from "./Render/Sprite";
 import Camera from "./Render/Camera";
@@ -27,7 +28,7 @@ export {
     //Controls
     Keyboard,
     //Resources
-    IResource, Resources, ImageResource,
+    IResource, Resources, ImageResource, Spritesheet,
     //Render
     Sprite, Camera
 };

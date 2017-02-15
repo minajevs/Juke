@@ -30,7 +30,7 @@ export default class Resources {
         let p = [];
         for(let res of this._resources){
             if(!res.loaded)
-                p.push(res.load());
+                p.push(res.load(this));
             
         }
         return Promise.all(p);

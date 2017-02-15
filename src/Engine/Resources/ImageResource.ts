@@ -15,17 +15,12 @@ export default class ImageResource implements IResource{
     loaded:boolean;
 
     constructor(options:IImageResourceOptions){
-        //TODO: investigate why this doesn't work
-        //Tools.extend(this, options);
-        this.src = options.src;
-        this.name = options.name;
+        Tools.extend(this, options);
         this.type = ResourceType.Image;
         this.loaded = false;
     }
 
-    public load():Promise<ImageResource>{
-        console.log('load res!');
-        
+    public load():Promise<ImageResource>{       
         let img = new Image();
         let promise = new Promise<ImageResource>((resolve, reject) => {
             img.onload = () => {

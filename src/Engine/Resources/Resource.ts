@@ -1,6 +1,10 @@
+import Resources from "./Resources";
+
 export enum ResourceType{
     Image,
     Sound,
+    Spritesheet,
+    SpritesheetMap
     //etc
 }
 
@@ -11,5 +15,5 @@ export interface IResource{
     src:string;
     res:HTMLImageElement | HTMLAudioElement;
     loaded:boolean;
-    load():Promise<IResource>;
+    load(resources?:Resources):Promise<IResource>;
 }
