@@ -20,7 +20,7 @@ export default class ImageResource implements IResource{
         this.loaded = false;
     }
 
-    public load():Promise<ImageResource>{       
+    public load():Promise<any>{       
         let img = new Image();
         let promise = new Promise<ImageResource>((resolve, reject) => {
             img.onload = () => {

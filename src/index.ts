@@ -5,11 +5,11 @@ import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Sprit
 
 
 
-let a = new Juke.Core({ debug: false });
+let a = new Juke.Core({ debug: true });
 a.resources.add(new ImageResource({ src: "../Assets/pika.png", name: "pikachu" }));
 a.resources.add(new ImageResource({ src: "../Assets/barrel.png", name: "barrel" }));
-
-a.resources.add(new Spritesheet({src: "../Assets/Sheet4.png", name: "sheet1", mapSrc: "../Assets/Sheet4.json"}));
+let sheet = new Spritesheet({ src: "../Assets/Sheet4.png", name: "sheet1", mapSrc: "../Assets/Sheet4.json" });
+a.resources.add(sheet);
 
 let player = new Player({
     keyboard: a.keyboard,
@@ -24,6 +24,7 @@ let player = new Player({
 });
 
 a.add(player);
+
 
 a.add(new GameObject({
     pos: new Vector(200, 200),
@@ -42,6 +43,17 @@ a.add(new GameObject({
     collider: new Rect({ pos: new Vector(300, 300), w: 62, h: 100 })
 }));
 
+a.init().then(res => {
+    a.add(new GameObject({
+        pos: new Vector(600, 600),
+        w: 150,
+        h: 150,
+        sprite: sheet.getSprite(null, "house1"),
+        renderable: true,
+        layer: 1
+    }));
+})
+
 //for (let i = 0; i < 100; i++) {
 //    for (let j = 0; j < 100; j++) {
 //        a.add(new GameObject({
@@ -55,4 +67,4 @@ a.add(new GameObject({
 //    }
 //}
 
-a.init();
+//a.init();

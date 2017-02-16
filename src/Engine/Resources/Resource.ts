@@ -15,5 +15,5 @@ export interface IResource{
     src:string;
     res:HTMLImageElement | HTMLAudioElement;
     loaded:boolean;
-    load(resources?:Resources):Promise<IResource>;
+    load(resources?:Resources):Promise<any>;
 }

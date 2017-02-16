@@ -32,8 +32,9 @@ export default class Render{
         this.ctx = this.ctx || this.CreateCanvas();
     }
 
-    public drawImage(resource:ImageResource, rect:Rect){
-        this.ctx.drawImage(resource.res, rect.pos.x, rect.pos.y, rect.w, rect.h);
+    public drawImage(resource:ImageResource, rect:Rect, offset:Rect){
+        console.log(offset);
+        this.ctx.drawImage(resource.res, offset.pos.x, offset.pos.y, offset.w, offset.h, rect.pos.x, rect.pos.y, rect.w, rect.h);
     }
 
     public debug(options:IDebugOptions){

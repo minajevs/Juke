@@ -52,7 +52,7 @@ export default class Camera extends GameObject{
     render(object:GameObject){
         if(object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)){  
             let drawRect = new Rect({pos: Vector._minus(object.sprite.pos, this.pos), w: object.sprite.w, h: object.sprite.h});     
-            this.renderer.drawImage(object.sprite.src, drawRect);
+            this.renderer.drawImage(object.sprite.src, drawRect, object.sprite.offset);
         } 
 
         if(this.debug && this.objectInView(object)){
