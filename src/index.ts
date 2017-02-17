@@ -1,7 +1,6 @@
 import TestGameObject from "./TestGameObject";
 import Player from "./Objects/Player";
-import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Spritesheet } from "./Engine/Juke";
-
+import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Spritesheet, Events } from "./Engine/Juke";
 
 
 
@@ -10,10 +9,11 @@ a.resources.add(new ImageResource({ src: "../Assets/pika.png", name: "pikachu" }
 a.resources.add(new ImageResource({ src: "../Assets/barrel.png", name: "barrel" }));
 let sheet = new Spritesheet({ src: "../Assets/Sheet4.png", name: "sheet1", mapSrc: "../Assets/Sheet4.txt" });
 a.resources.add(sheet);
+Events.subscribe("player:update", (player:GameObject) => {
+    a.camera.center = player.center;
+});
 
 let player = new Player({
-    keyboard: a.keyboard,
-    camera: a.camera,
     pos: new Vector(100, 100),
     w: 100,
     h: 100,

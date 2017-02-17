@@ -19,8 +19,9 @@ describe("Test default Core constructor", () => {
         chai.assert.instanceOf(core.camera, Camera);        
     });
     it("Keyboard is set up", () => {    
-        chai.assert.isNotNull(core.keyboard);
-        chai.assert.instanceOf(core.keyboard, Keyboard);
+        chai.assert.isNotNull(Keyboard);
+        chai.assert.isUndefined((<any>Keyboard).keys[999]);
+        chai.assert.strictEqual((<any>Keyboard).keys[32], false);
     });
     it("Spatial map is set up", () => {    
         chai.assert.isNotNull(core.spatialMap);
@@ -58,7 +59,6 @@ describe("Test custom Core constructors", () => {
     it("Custom camera is set up", () => {
         chai.assert.isNotNull(customConstructor.camera); 
         chai.assert.instanceOf(customConstructor.camera, Camera);   
-        chai.assert.strictEqual(customConstructor.camera.debug, true);
         chai.assert.strictEqual(customConstructor.camera.pos.x, 11);
         chai.assert.strictEqual(customConstructor.camera.pos.y, 12);
         chai.assert.strictEqual(customConstructor.camera.w, 100);

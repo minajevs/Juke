@@ -8,8 +8,12 @@ export default class Tick{
     update: boolean;
     map: SpatialMap;
     world: Rect;
+    events: {[id:string] : Event} = {}
+    variables: {[id:string] : number|boolean|string} = {}
 
     constructor(tick?: number){
         this.tick = tick || this.tick;
+        this.events = {};
+        this.variables = {};
     }
 }

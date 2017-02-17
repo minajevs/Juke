@@ -1,33 +1,29 @@
 import * as Juke from "../Engine/Juke";
 
 interface IPlayerOptions extends Juke.IGameObjectOptions{
-    keyboard: Juke.Keyboard;
-    camera: Juke.Camera;
+
 }
 
 export default class Player extends Juke.GameObject{
-    private keyboard: Juke.Keyboard;
-    private camera: Juke.Camera;
-
     constructor(options: IPlayerOptions){
         super(options);
-        this.keyboard = options.keyboard;
-        this.camera = options.camera;
         this.tag = "player";
     }
 
     update(tick: Juke.Tick){
         super.update(tick);
 
-        if (this.keyboard.isDown(Juke.Keyboard.UP))       this.move(-5, false);
-        if (this.keyboard.isDown(Juke.Keyboard.DOWN))     this.move(5, false);
-        if (this.keyboard.isDown(Juke.Keyboard.RIGHT))    this.move(5, true);
-        if (this.keyboard.isDown(Juke.Keyboard.LEFT))     this.move(-5, true);
-        if (this.keyboard.isDown(Juke.Keyboard.SPACE))    console.log(this);
+        let kb = Juke.Keyboard;
+
+        if (kb.isDown(Juke.Keyboard.UP))       this.move(-5, false);
+        if (kb.isDown(Juke.Keyboard.DOWN))     this.move(5, false);
+        if (kb.isDown(Juke.Keyboard.RIGHT))    this.move(5, true);
+        if (kb.isDown(Juke.Keyboard.LEFT))     this.move(-5, true);
+        if (kb.isDown(Juke.Keyboard.SPACE))    console.log(this);
 
         this.collider.pos = this.pos;
         this.sprite.pos = this.pos;
-        this.camera.center = this.center;
+        Juke.Events.emit("player:update", this);
     }
 
     private move(step: number, vertical: boolean){

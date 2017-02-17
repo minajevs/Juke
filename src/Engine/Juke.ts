@@ -2,6 +2,7 @@
 import Core from "./Core/Core";
 import Tick from "./Core/Tick";
 import Objects from "./Core/Objects";
+import Events from "./Core/Events";
 //Physics
 import GameObject, {IGameObjectOptions} from "./Physics/GameObject";
 import Vector from "./Physics/Vector";
@@ -22,7 +23,7 @@ export default {Core};
 
 export {
     //Core
-    Core, Objects, Tick,
+    Core, Objects, Tick, Events,
     //Physics
     Vector, Rect, GameObject, IGameObjectOptions,
     //Controls

@@ -8,7 +8,6 @@ export interface ISpatialMapOptions{
     w?: number;
     h?: number;
     cellsize?: number;
-    debug?: boolean;
 }
 
 export default class SpatialMap{
@@ -16,7 +15,6 @@ export default class SpatialMap{
     h: number;
     cellsize: number;
     objects: Array<GameObject> = [];
-    debug: boolean = false;
 
     private colCount: number;
     private rowCount: number;
@@ -37,7 +35,6 @@ export default class SpatialMap{
         for (let bucketId of bucketIds){
             if (this.buckets[bucketId] != null)
                 this.buckets[bucketId].push(object);
-            else {if (this.debug) console.log(`Can't add obj with x:${object.collider.pos.x} y:${object.collider.pos.y} w:${object.collider.w} h:${object.collider.h}`); }
         }
     }
 

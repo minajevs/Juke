@@ -11,15 +11,14 @@ import Tick from "../Core/Tick";
 interface ICameraOptions extends IGameObjectOptions{
     render?: Render;
     gameObjects?: Objects;
-    debug?: boolean;
 }
 
 
 export default class Camera extends GameObject{
     private renderer: Render;
     private lastUpdate: number;
+    private debug: boolean;
     gameObjects: Objects;
-    debug: boolean = false;
     constructor(options?: ICameraOptions){
         super(options);
         this.tag = "camera";
@@ -29,6 +28,7 @@ export default class Camera extends GameObject{
 
     update(tick: Tick){
         this.lastUpdate = tick.tick;
+        this.debug = tick.variables["debug"] === true;
         this.renderer.clear();
     }
 
@@ -37,16 +37,6 @@ export default class Camera extends GameObject{
             this.update(tick);
         }
         this.render(object);
-    }
-
-    prepareUpdate(object: GameObject){
-        let clearRect = object.getRect();
-        if (this.debug) {
-            clearRect.pos = Vector._minus(clearRect.pos, new Vector(1, 12));
-            clearRect.w += 2;
-            clearRect.h += 13;
-        }
-        this.renderer.clear(clearRect);
     }
 
     render(object: GameObject){

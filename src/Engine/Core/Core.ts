@@ -10,6 +10,7 @@ import ImageResource from "../Resources/ImageResource";
 import Objects from "./Objects";
 import SpatialMap from "../Physics/SpatialMap";
 import Tick from "./Tick";
+import Events from "./Events";
 
 
 interface ICoreOptions {
@@ -43,10 +44,9 @@ export default class Core {
         Tools.extend(this.options, options);
         Tools.extend(this, options);
 
-        this.keyboard = new Keyboard([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
+        Keyboard.initialize([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
+
         this.camera.gameObjects = this.objects;
-        this.camera.debug = this.debug;
-        this.spatialMap.debug = this.debug;
         if (this.options.w && this.options.h) {
             this.spatialMap.w = this.options.w;
             this.spatialMap.h = this.options.h;
@@ -92,6 +92,8 @@ export default class Core {
     }
 
     private loop = (tick: number) => {
+        let internalTick = new Tick(tick);
+        internalTick.variables["debug"] = true;
         if (this.debug) {
             this.stats.fps.begin();
             this.stats.loop.begin();
@@ -101,7 +103,6 @@ export default class Core {
         if (elapsed > this.fpsInterval) {
             this.lastTick = now - (elapsed % this.fpsInterval);
         }
-        let internalTick = new Tick(tick);
         this.update(internalTick);
         if (this.debug) {
             this.stats.fps.end();
@@ -130,26 +131,6 @@ export default class Core {
                 }
             }
         }
-
-
-        //Update objects
-        //for (let i = 0; i < this.objects.layerCount; i++) {
-        //    if (this.objects.length(i) > 0) {
-        //        let layer = this.objects.get(i);
-        //        for (let obj of layer) {
-        //            //tick.collisions = this.collider.collisions(obj);
-        //            if (obj.collider != null) {
-        //                if (this.debug) this.stats.collisions.begin();
-        //                tick.bucket = this.spatialMap.getNearby(obj);
-        //                if (this.debug) this.stats.collisions.end();
-        //            }
-        //            if (this.debug) this.stats.update.begin();
-        //            obj.update(tick);
-        //            this.camera.updateObject(tick, obj);
-        //            if (this.debug) this.stats.update.end();
-        //        }
-        //    }
-        //}
     }
 }
 
