@@ -8,7 +8,7 @@ import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Sprit
 let a = new Juke.Core({ debug: true });
 a.resources.add(new ImageResource({ src: "../Assets/pika.png", name: "pikachu" }));
 a.resources.add(new ImageResource({ src: "../Assets/barrel.png", name: "barrel" }));
-let sheet = new Spritesheet({ src: "../Assets/Sheet4.png", name: "sheet1", mapSrc: "../Assets/Sheet4.json" });
+let sheet = new Spritesheet({ src: "../Assets/Sheet4.png", name: "sheet1", mapSrc: "../Assets/Sheet4.txt" });
 a.resources.add(sheet);
 
 let player = new Player({
@@ -24,6 +24,8 @@ let player = new Player({
 });
 
 a.add(player);
+
+console.log(player);
 
 
 a.add(new GameObject({

@@ -25,19 +25,19 @@ export default class Spritesheet extends ImageResource {
         if (this.mapSrc != null) {
             this.map = new SpritesheetMap(this.mapSrc);
             let loadResult = await this.map.load();
-            if(!loadResult) { this.map = null; }
+            if (!loadResult) { this.map = null; }
         }
     }
 
-    getSprite(position?:Rect,name?:string):Sprite{
-        if(name != null){
-            if(this.map == null) return null;
+    getSprite(position?: Rect, name?: string): Sprite {
+        if (name != null) {
+            if (this.map == null) return null;
             let map = this.map.sprites[name];
-            if(map == null) return null;
-            return this.getSprite(new Rect({pos: new Vector(map.x, map.y), w: map.w, h: map.h}));
-        } else if(position != null) {
+            if (map == null) return null;
+            return this.getSprite(new Rect({ pos: new Vector(map.x, map.y), w: map.w, h: map.h }));
+        } else if (position != null) {
             return new Sprite({
-                src: this, 
+                src: this,
                 name: `${this.name}${position.pos.x}-${position.pos.y}_${position.w}_${position.h}`,
                 offset: position
             })
@@ -56,11 +56,16 @@ class SpritesheetMap {
         return this;
     }
 
-    async load(){
+    async load() {
         try {
             let response = await fetch(this.src);
-            let data = await response.json();
-            this.parseLines(data);
+            if (this.src.indexOf(".json") !== -1) {
+                let json = await response.json();
+                this.parseJsonLines(json);
+            } else {
+                let text = await response.text();
+                this.parseStringLines(text);
+            }
             return true;
         } catch (e) {
             console.log("Can't load map " + this.src);
@@ -68,10 +73,15 @@ class SpritesheetMap {
         }
     }
 
-    private parseLines(lines: Array<string>) {
+    private parseJsonLines(lines: Array<string>) {
         for (let line of lines) {
             let args = line.split(" ");
             this.sprites[args[0]] = { x: parseInt(args[2]), y: parseInt(args[3]), w: parseInt(args[4]), h: parseInt(args[5]) };
         }
+    }
+
+    private parseStringLines(text:string){
+        let arr = text.split(/\r?\n/);
+        this.parseJsonLines(arr);
     }
 }

@@ -33,7 +33,6 @@ export default class Render{
     }
 
     public drawImage(resource:ImageResource, rect:Rect, offset:Rect){
-        console.log(offset);
         this.ctx.drawImage(resource.res, offset.pos.x, offset.pos.y, offset.w, offset.h, rect.pos.x, rect.pos.y, rect.w, rect.h);
     }
 

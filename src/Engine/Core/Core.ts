@@ -80,9 +80,12 @@ export default class Core {
         window.requestAnimationFrame = requestAnimationFrame;
         this.fpsInterval = 1000 / this.options.fps;
 
+        console.log('Started loading game!');
+        let start = Date.now();
         let p = this.resources.loadAll();
         p.then(res => {
             this.start();
+            console.log(`Game loaded in ${Date.now() - start}ms`);
         });
 
         return p;

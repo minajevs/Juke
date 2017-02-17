@@ -16,17 +16,18 @@ export default class Sprite extends Renderable{
     src:ImageResource;
     name:string;
     mirror:{vertical:boolean, horizontal:boolean} = {vertical: false, horizontal: false};
-    offset: Rect = new Rect({pos: new Vector(0,0), w: this.w, h: this.h});
-    
+    private _offset:Rect;
+    get offset() {
+        return this._offset == null
+            ? new Rect({pos:new Vector(0,0), w: this.src && this.src.res && this.src.res.width || this.w, h: this.src && this.src.res && this.src.res.height || this.h})
+            : this._offset;
+    };
+    set offset(value:Rect){this._offset = value;}
     constructor(options:ISpriteOptions){
         super(options);
         Tools.extend(this, options)
         this.src = <ImageResource>options.src;
         if(options.name == null)
             this.name = options.src.name;
-        if(options.offset == null) {
-            this.offset.w = this.w;
-            this.offset.h = this.h;
-        }
     }
 }
