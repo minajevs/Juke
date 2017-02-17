@@ -26,17 +26,20 @@ export default class Resources {
         }
     }
 
-    public loadAll(): Promise<IResource[]> {
-        let p = [];
+    public async loadAll(progressCallback: (count:number) => any = function(){}){
+        let loaded = 0;
         for (let res of this._resources){
             if (!res.loaded)
-                p.push(res.load(this));
-
+                await res.load(this);
+            progressCallback(++loaded);
         }
-        return Promise.all(p);
     }
 
-    public getByName(name: string): IResource {
+    public length(){
+        return this._resources.length;
+    }
+
+    public getByName(name: string): IResource{
         return this._resources.find(x => x.name === name);
     }
 

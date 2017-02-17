@@ -29,21 +29,22 @@ export default class Spritesheet extends ImageResource {
         }
     }
 
-    getSprite(position?: Rect, name?: string): Sprite {
-        if (name != null) {
-            if (this.map == null) return null;
-            let map = this.map.sprites[name];
-            if (map == null) return null;
-            return this.getSprite(new Rect({ pos: new Vector(map.x, map.y), w: map.w, h: map.h }));
-        } else if (position != null) {
-            return new Sprite({
-                src: this,
-                name: `${this.name}${position.pos.x}-${position.pos.y}_${position.w}_${position.h}`,
-                offset: position
-            });
-        } else {
-            return null;
-        }
+    getSprite(position: Rect): Sprite {
+        if (position == null) return null;
+        return new Sprite({
+            src: this,
+            name: `${this.name}${position.pos.x}-${position.pos.y}_${position.w}_${position.h}`,
+            offset: position
+        });
+    }
+
+    getSpriteByName(name: string): Sprite {
+        if (this.map == null) return null;
+
+        let map = this.map.sprites[name];
+        if (map == null) return null;
+        
+        return this.getSprite(new Rect({ pos: new Vector(map.x, map.y), w: map.w, h: map.h }));
     }
 }
 
@@ -80,7 +81,7 @@ class SpritesheetMap {
         }
     }
 
-    private parseStringLines(text: string){
+    private parseStringLines(text: string) {
         let arr = text.split(/\r?\n/);
         this.parseJsonLines(arr);
     }

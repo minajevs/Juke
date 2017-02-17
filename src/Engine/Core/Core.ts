@@ -75,20 +75,18 @@ export default class Core {
         this.spatialMap.add(obj);
     }
 
-    public init(): Promise<any> {
+    public async init() {
         let requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         this.fpsInterval = 1000 / this.options.fps;
 
         console.log("Started loading game!");
         let start = Date.now();
-        let p = this.resources.loadAll();
-        p.then(res => {
-            this.start();
-            console.log(`Game loaded in ${Date.now() - start}ms`);
+        await this.resources.loadAll(count => {
+            if(this.debug) console.log((100*count/this.resources.length()).toFixed(0) + "%");
         });
-
-        return p;
+        this.start();
+        console.log(`Game loaded in ${Date.now() - start}ms`);
     }
 
     private loop = (tick: number) => {

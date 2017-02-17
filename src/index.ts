@@ -25,9 +25,6 @@ let player = new Player({
 
 a.add(player);
 
-console.log(player);
-
-
 a.add(new GameObject({
     pos: new Vector(200, 200),
     w: 100,
@@ -50,23 +47,8 @@ a.init().then(res => {
         pos: new Vector(600, 600),
         w: 150,
         h: 150,
-        sprite: sheet.getSprite(null, "house1"),
+        sprite: sheet.getSpriteByName("house1"),
         renderable: true,
         collider: true
     }));
 });
-
-//for (let i = 0; i < 100; i++) {
-//    for (let j = 0; j < 100; j++) {
-//        a.add(new GameObject({
-//            pos: new Vector(i * 20, j * 20),
-//            w: 20,
-//            h: 20,
-//            sprite: new Sprite({ src: a.resources.getByName("pikachu") }),
-//            renderable: true,
-//            collider: new Rect({ pos: new Vector(0, 0), w: 0, h: 0 })
-//        }));
-//    }
-//}
-
-//a.init();
