@@ -20,7 +20,7 @@ let player = new Player({
     sprite: new Sprite({ src: a.resources.getByName("pikachu") }),
     renderable: true,
     layer: 1,
-    collider: new Rect({ pos: new Vector(100, 100), w: 100, h: 100 })
+    collider: true
 });
 
 a.add(player);
@@ -52,7 +52,7 @@ a.init().then(res => {
         h: 150,
         sprite: sheet.getSprite(null, "house1"),
         renderable: true,
-        layer: 1
+        collider: true
     }));
 })
 

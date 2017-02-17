@@ -13,6 +13,24 @@ describe("Test GameObject", () => {
         renderable: true,
         collider: new Rect({pos: new Vector(0,0), w: 10, h: 10})
     });
+
+    let objectWithColliderBoolean = new GameObject({
+        pos: new Vector(100,200),
+        w: 111,
+        h: 222,
+        collider: true
+    });
+    let objectWithOutColliderBoolean = new GameObject({
+        pos: new Vector(100,200),
+        w: 111,
+        h: 222,
+    });
+    let objectWithOutColliderBooleanFalse = new GameObject({
+        pos: new Vector(100,200),
+        w: 111,
+        h: 222,
+        collider: false
+    });
     it("Pos is set", () => {
         chai.assert.strictEqual(object.pos.x, 22);
         chai.assert.strictEqual(object.pos.y, 33);
@@ -40,6 +58,18 @@ describe("Test GameObject", () => {
         chai.assert.strictEqual(object.collider.pos.y, 0);
         chai.assert.strictEqual(object.collider.w, 10);
         chai.assert.strictEqual(object.collider.h, 10);
+    });
+    it("Collider is set from boolean (true)", () => {
+        chai.assert.strictEqual(objectWithColliderBoolean.collider.pos.x, 100);
+        chai.assert.strictEqual(objectWithColliderBoolean.collider.pos.y, 200);
+        chai.assert.strictEqual(objectWithColliderBoolean.collider.w, 111);
+        chai.assert.strictEqual(objectWithColliderBoolean.collider.h, 222);
+    });
+    it("Collider is not set from boolean (undefined)", () => {
+        chai.assert.isUndefined(objectWithOutColliderBoolean.collider);
+    });
+    it("Collider is not set from boolean (false)", () => {
+        chai.assert.isUndefined(objectWithOutColliderBooleanFalse.collider);
     });
     it("GameObject moves by correctly", () => {
         object.moveBy(new Vector(10,10));

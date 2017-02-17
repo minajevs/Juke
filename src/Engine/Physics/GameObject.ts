@@ -18,7 +18,7 @@ export interface IGameObjectOptions extends IRectOptions {
     renderable?: boolean;
     sprite?: Sprite;
     layer?: EnumLayer;
-    collider?: Rect;
+    collider?: Rect | boolean;
 }
 
 export default class GameObject extends Rect {
@@ -27,13 +27,23 @@ export default class GameObject extends Rect {
     sprite: Sprite; //TODO: add some default sprite
     layer: EnumLayer = 0;
     collider: Rect;
-    nearObjects: [Array<GameObject>, number] = [[], 0]
+    private _nearObjects: [Array<GameObject>, number] = [[], 0]; //Objectlist , last update tick
+    get nearObjects():Array<GameObject> {
+        if (this._nearObjects[1] != this.tick.tick)
+            this._nearObjects = [this.tick.map.getNearby(this), this.tick.tick]
+        return this._nearObjects[0];
+    }
 
     tick: Tick;
 
     constructor(options?: IGameObjectOptions) {
         super(options);
         Tools.extend(this, options);
+        if (typeof options.collider === "boolean") {
+            this.collider = options.collider
+                ? new Rect({ pos: this.pos, w: this.w, h: this.h })
+                : undefined;
+        }
         if (this.sprite) {
             this.sprite.pos = this.pos;
             this.sprite.w = this.w;
@@ -49,25 +59,33 @@ export default class GameObject extends Rect {
         return new Rect({ pos: this.pos, w: this.w, h: this.h });
     }
 
-    collides(object?: GameObject): [boolean, Array<GameObject>] {
-        if (this.collider == null || this.tick == null) return [false, null];
+    collides(object?: GameObject): boolean {
+        if (this.collider == null || this.tick == null) return false;
 
         if (object != null) {
-            return object.collider == null 
-                    ? [false, null]
-                    : [this.collider.intersects(object.collider), null]
+            return object.collider == null
+                ? false
+                : this.collider.intersects(object.collider);
         } else {
-            let ret = new Array<GameObject>();
-            if(this.nearObjects[1] != this.tick.tick) 
-                this.nearObjects = [this.tick.map.getNearby(this), this.tick.tick] //if nearobjects are not fresh - update
-            for (let obj of this.nearObjects[0]) {
-                if(obj === this) continue;
+            for (let obj of this.nearObjects) {
+                if (obj === this) continue;
                 if (this.collider.intersects(obj.collider)) {
-                    ret.push(obj);
+                    return true
                 }
             }
-            return [ret.length > 0,ret];
+            return false;
         }
+    }
+
+    collisions(): Array<GameObject> {
+        let ret = new Array<GameObject>();
+        for (let obj of this.nearObjects) {
+            if (obj === this) continue;
+            if (this.collider.intersects(obj.collider)) {
+                ret.push(obj);
+            }
+        }
+        return ret;
     }
 
     moveBy(pos: Vector) {
