@@ -1,3 +1,7 @@
 language: node_js
 node_js: node
 skip_cleanup: true
+before_script:
+    -npm install -g webpack
+    -npm install -g karma
+    

@@ -14,22 +14,6 @@
   "author": "Dmitrijs Minajevs @minajevs",
   "license": "ISC",
   "homepage": "https://github.com/minajevs/Juke#readme",
-  "dependencies": {
-    "awesome-typescript-loader": "^3.0.0-beta.18",
-    "chai": "^3.5.0",
-    "karma": "^1.4.1",
-    "karma-chai": "^0.1.0",
-    "karma-mocha": "^1.3.0",
-    "karma-mocha-reporter": "^2.2.2",
-    "karma-phantomjs-launcher": "^1.0.2",
-    "karma-sinon": "^1.0.5",
-    "karma-webpack": "^2.0.2",
-    "mocha": "^3.2.0",
-    "phantomjs-prebuilt": "^2.1.14",
-    "sinon": "^1.17.7",
-    "typescript": "^2.1.6",
-    "webpack": "^2.1.0-beta.22"
-  },
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.39",
