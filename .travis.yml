@@ -2,7 +2,7 @@ language: node_js
 node_js: node
 skip_cleanup: true
 before_script:
-    - npm install webpack
+    - npm install webpack@2.1.0-beta.22
     - npm install karma
     - npm install karma-webpack
     

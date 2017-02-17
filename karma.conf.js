@@ -1,5 +1,9 @@
 var webpackConfig = require("./webpack.config.js");
 
+let travis = process.env.TRAVIS || false;
+
+if(travis) console.log("Running in Travis!");
+
 module.exports = function(config) {
   config.set({
     basePath: '',
@@ -18,6 +22,7 @@ module.exports = function(config) {
 
     port: 9876,
     colors: true,
+    singleRun: travis,
 
     logLevel: config.LOG_INFO,
     autoWatch: true,
