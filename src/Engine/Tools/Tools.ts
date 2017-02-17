@@ -1,8 +1,8 @@
 import Core from "../Core/Core";
 
 export default class Tools {
-    public static extend(target:any, source:any): void {
-        if(target == null || source == null) return;
+    public static extend(target: any, source: any): void {
+        if (target == null || source == null) return;
         Object.keys(source).forEach((key) => {
             target[key] = source[key];
         });

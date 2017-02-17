@@ -28,9 +28,9 @@ export default class GameObject extends Rect {
     layer: EnumLayer = 0;
     collider: Rect;
     private _nearObjects: [Array<GameObject>, number] = [[], 0]; //Objectlist , last update tick
-    get nearObjects():Array<GameObject> {
+    get nearObjects(): Array<GameObject> {
         if (this._nearObjects[1] != this.tick.tick)
-            this._nearObjects = [this.tick.map.getNearby(this), this.tick.tick]
+            this._nearObjects = [this.tick.map.getNearby(this), this.tick.tick];
         return this._nearObjects[0];
     }
 
@@ -70,7 +70,7 @@ export default class GameObject extends Rect {
             for (let obj of this.nearObjects) {
                 if (obj === this) continue;
                 if (this.collider.intersects(obj.collider)) {
-                    return true
+                    return true;
                 }
             }
             return false;

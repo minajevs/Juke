@@ -1,4 +1,4 @@
-import TestGameObject from './TestGameObject';
+import TestGameObject from "./TestGameObject";
 import Player from "./Objects/Player";
 import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Spritesheet } from "./Engine/Juke";
 
@@ -54,7 +54,7 @@ a.init().then(res => {
         renderable: true,
         collider: true
     }));
-})
+});
 
 //for (let i = 0; i < 100; i++) {
 //    for (let j = 0; j < 100; j++) {

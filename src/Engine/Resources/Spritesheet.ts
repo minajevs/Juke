@@ -1,11 +1,11 @@
-import ImageResource, { IImageResourceOptions } from './ImageResource';
-import { IResource, ResourceType } from './Resource';
-import Resources from './Resources';
+import ImageResource, { IImageResourceOptions } from "./ImageResource";
+import { IResource, ResourceType } from "./Resource";
+import Resources from "./Resources";
 import Renderable, { IRenderableOptions } from "../Render/Renderable";
-import Tools from '../Tools/Tools';
-import Rect from '../Physics/Rect';
-import Vector from '../Physics/Vector';
-import Sprite from '../Render/Sprite';
+import Tools from "../Tools/Tools";
+import Rect from "../Physics/Rect";
+import Vector from "../Physics/Vector";
+import Sprite from "../Render/Sprite";
 
 interface ISpriteSheetOptions extends IImageResourceOptions {
     mapSrc?: string;
@@ -40,7 +40,7 @@ export default class Spritesheet extends ImageResource {
                 src: this,
                 name: `${this.name}${position.pos.x}-${position.pos.y}_${position.w}_${position.h}`,
                 offset: position
-            })
+            });
         } else {
             return null;
         }
@@ -49,7 +49,7 @@ export default class Spritesheet extends ImageResource {
 
 class SpritesheetMap {
     src: string;
-    sprites: { [name: string]: { x: number, y: number, w: number, h: number } } = {}
+    sprites: { [name: string]: { x: number, y: number, w: number, h: number } } = {};
 
     constructor(src: string) {
         this.src = src;
@@ -80,7 +80,7 @@ class SpritesheetMap {
         }
     }
 
-    private parseStringLines(text:string){
+    private parseStringLines(text: string){
         let arr = text.split(/\r?\n/);
         this.parseJsonLines(arr);
     }

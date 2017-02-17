@@ -28,10 +28,10 @@ export default class Resources {
 
     public loadAll(): Promise<IResource[]> {
         let p = [];
-        for(let res of this._resources){
-            if(!res.loaded)
+        for (let res of this._resources){
+            if (!res.loaded)
                 p.push(res.load(this));
-            
+
         }
         return Promise.all(p);
     }
@@ -44,4 +44,4 @@ export default class Resources {
         return resource.name === "untitled" ||
             this._resources.find(x => x.name === resource.name) != null;
     }
-} 
+}

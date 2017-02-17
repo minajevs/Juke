@@ -9,11 +9,11 @@ export enum ResourceType{
 }
 
 export interface IResource{
-    name:string;
-    id:number;
-    type:ResourceType;
-    src:string;
-    res:HTMLImageElement | HTMLAudioElement;
-    loaded:boolean;
-    load(resources?:Resources):Promise<any>;
+    name: string;
+    id: number;
+    type: ResourceType;
+    src: string;
+    res: HTMLImageElement | HTMLAudioElement;
+    loaded: boolean;
+    load(resources?: Resources): Promise<any>;
 }

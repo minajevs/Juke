@@ -1,7 +1,7 @@
 import GameObject from "./Engine/Physics/GameObject";
 
 export default class TestGameObject extends GameObject{
-    public text:string = "TEST";
+    public text: string = "TEST";
 
     constructor(){
         super();

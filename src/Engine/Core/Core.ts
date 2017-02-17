@@ -1,4 +1,4 @@
-import Resources from './../Resources/Resources';
+import Resources from "./../Resources/Resources";
 import udpate from "../Render/Render";
 import Tools from "../Tools/Tools";
 import * as _Stats from "../Tools/Stats";
@@ -65,7 +65,7 @@ export default class Core {
 
     public stop(): void {
         if (this.requestId) {
-            window.cancelAnimationFrame(this.requestId)
+            window.cancelAnimationFrame(this.requestId);
             this.requestId = null;
         }
     }
@@ -76,11 +76,11 @@ export default class Core {
     }
 
     public init(): Promise<any> {
-        var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+        let requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         this.fpsInterval = 1000 / this.options.fps;
 
-        console.log('Started loading game!');
+        console.log("Started loading game!");
         let start = Date.now();
         let p = this.resources.loadAll();
         p.then(res => {
