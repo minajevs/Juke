@@ -4,7 +4,7 @@
   "description": "Game Engine experiment",
   "main": "index.js",
   "scripts": {
-    "test": "karma start",
+    "test": "./node_modules/.bin/karma start",
     "start": "webpack-dev-server --port 1338"
   },
   "repository": {
