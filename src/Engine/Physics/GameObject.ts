@@ -19,6 +19,8 @@ export interface IGameObjectOptions extends IRectOptions {
     sprite?: Sprite;
     layer?: EnumLayer;
     collider?: Rect | boolean;
+    children?: Array<GameObject>;
+    parent?: GameObject;
 }
 
 export default class GameObject extends Rect {
@@ -27,6 +29,24 @@ export default class GameObject extends Rect {
     sprite: Sprite; //TODO: add some default sprite
     layer: EnumLayer = 0;
     collider: Rect;
+    private _children: Array<GameObject> = [];
+    get children():Array<GameObject>{return this._children.slice()}//returns copy to avoid data corruption!!!!
+    set children(value:Array<GameObject>){
+        if(this._children == null) this._children = []; //strange behavior, but we need this. either way compilator errors appear
+        for(let obj of value)
+            this.addChild(obj);
+    }
+
+    private _parent: GameObject;
+    get parent():GameObject {return this._parent;}
+    set parent(value:GameObject) {
+        if(this.parent != null)
+            this.parent.removeChild(this);
+        
+        if(value != null)
+            value.addChild(this);
+    }
+
     private _nearObjects: [Array<GameObject>, number] = [[], 0]; //Objectlist , last update tick
     get nearObjects(): Array<GameObject> {
         if (this._nearObjects[1] != this.tick.tick)
@@ -39,7 +59,7 @@ export default class GameObject extends Rect {
     constructor(options?: IGameObjectOptions) {
         super(options);
         Tools.extend(this, options);
-        if (typeof options.collider === "boolean") {
+        if (options && options.collider != null && typeof options.collider === "boolean") {
             this.collider = options.collider
                 ? new Rect({ pos: this.pos, w: this.w, h: this.h })
                 : undefined;
@@ -53,6 +73,22 @@ export default class GameObject extends Rect {
 
     update(tick: Tick) {
         this.tick = tick;
+    }
+
+    addChild(object: GameObject) {
+        if (this._children.indexOf(object) > -1) return;
+
+        this._children.push(object);
+        object._parent = this;
+    }
+
+    removeChild(object: GameObject) {
+        let index = this._children.indexOf(object);
+        if (index <= -1) return;
+
+        object._parent = null;
+        this._children.splice(index, 1);
+
     }
 
     getRect(): Rect {
