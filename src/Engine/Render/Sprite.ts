@@ -4,6 +4,7 @@ import Renderable, {IRenderableOptions} from "./Renderable";
 import Tools from "../Tools/Tools";
 import Rect from "../Physics/Rect";
 import Vector from "../Physics/Vector";
+import GameObject from "../Physics/GameObject";
 
 interface ISpriteOptions extends IRenderableOptions{
     src: ImageResource | IResource;

@@ -117,7 +117,7 @@ export default class Core {
         //Update objects
         let objects = this.objects.get();
         for (let obj of objects) {
-            if (obj.collider != null)
+            if (obj.colliders.length > 0)
                 tick.map = this.spatialMap;
             obj.update(tick);
         }

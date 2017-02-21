@@ -1,4 +1,4 @@
-import GameObject, { EnumLayer } from "../src/Engine/Physics/GameObject";
+import GameObject, { EnumLayer, Roles } from "../src/Engine/Physics/GameObject";
 import Vector from "../src/Engine/Physics/Vector";
 import Rect from "../src/Engine/Physics/Rect";
 
@@ -11,14 +11,14 @@ describe("Test GameObject", () => {
         layer: 3,
         tag: "testObj%",
         renderable: true,
-        collider: new Rect({ pos: new Vector(0, 0), w: 10, h: 10 })
+        children: [new GameObject({ pos: new Vector(0, 0), w: 10, h: 10, role: Roles.collider})]
     });
 
     let objectWithColliderBoolean = new GameObject({
         pos: new Vector(100, 200),
         w: 111,
         h: 222,
-        collider: true
+        collides: true
     });
     let objectWithOutColliderBoolean = new GameObject({
         pos: new Vector(100, 200),
@@ -29,7 +29,7 @@ describe("Test GameObject", () => {
         pos: new Vector(100, 200),
         w: 111,
         h: 222,
-        collider: false
+        collides: false
     });
     it("Pos is set", () => {
         chai.assert.strictEqual(object.pos.x, 22);
@@ -53,23 +53,28 @@ describe("Test GameObject", () => {
     it("Renderability is set", () => {
         chai.assert.isTrue(object.renderable);
     });
+    it("Position lock is set", () => {
+        chai.assert.isUndefined(object.positionLock);
+    });
     it("Collider is set", () => {
-        chai.assert.strictEqual(object.collider.pos.x, 0);
-        chai.assert.strictEqual(object.collider.pos.y, 0);
-        chai.assert.strictEqual(object.collider.w, 10);
-        chai.assert.strictEqual(object.collider.h, 10);
+        chai.assert.isNotNull(object.colliders);
+        chai.assert.strictEqual(object.colliders.length, 1);
+        chai.assert.strictEqual(object.colliders[0].pos.x, 0);
+        chai.assert.strictEqual(object.colliders[0].pos.y, 0);
+        chai.assert.strictEqual(object.colliders[0].w, 10);
+        chai.assert.strictEqual(object.colliders[0].h, 10);
     });
     it("Collider is set from boolean (true)", () => {
-        chai.assert.strictEqual(objectWithColliderBoolean.collider.pos.x, 100);
-        chai.assert.strictEqual(objectWithColliderBoolean.collider.pos.y, 200);
-        chai.assert.strictEqual(objectWithColliderBoolean.collider.w, 111);
-        chai.assert.strictEqual(objectWithColliderBoolean.collider.h, 222);
+        chai.assert.strictEqual(objectWithColliderBoolean.colliders[0].pos.x, 100);
+        chai.assert.strictEqual(objectWithColliderBoolean.colliders[0].pos.y, 200);
+        chai.assert.strictEqual(objectWithColliderBoolean.colliders[0].w, 111);
+        chai.assert.strictEqual(objectWithColliderBoolean.colliders[0].h, 222);
     });
     it("Collider is not set from boolean (undefined)", () => {
-        chai.assert.isUndefined(objectWithOutColliderBoolean.collider);
+        chai.assert.isUndefined(objectWithOutColliderBoolean.colliders[0]);
     });
     it("Collider is not set from boolean (false)", () => {
-        chai.assert.isUndefined(objectWithOutColliderBooleanFalse.collider);
+        chai.assert.isUndefined(objectWithOutColliderBooleanFalse.colliders[0]);
     });
     it("GameObject moves by correctly", () => {
         object.moveBy(new Vector(10, 10));
@@ -117,16 +122,20 @@ describe("GameObject coupling", () => {
     });
     //Constructors custom
     it("Custom children in constructor are set", () => {
+        console.log(objWithChildren.children);
         chai.assert.isNotNull(objWithChildren.children);
         chai.assert.strictEqual(objWithChildren.children.length, 2);
         chai.assert.strictEqual(objWithChildren.children[0].tag, "test");
         chai.assert.strictEqual(objWithChildren.children[1].tag, "test2");
+        chai.assert.strictEqual(objWithChildren.children[0].positionLock, objWithChildren.children[0].parent);
+        chai.assert.strictEqual(objWithChildren.children[0].positionLock, objWithChildren);
     });
     it("Custom parent in constructor is set", () => {
         chai.assert.isNotNull(childWithParent.parent);
         chai.assert.strictEqual(childWithParent.parent.children.length, 1);
         chai.assert.strictEqual(childWithParent.parent.tag, "123");
         chai.assert.strictEqual(childWithParent.parent.children[0], childWithParent);
+        chai.assert.strictEqual(childWithParent.parent.children[0].positionLock, childWithParent.parent);
     });
     //Add
     it("Can add parent", () => {
@@ -156,5 +165,43 @@ describe("GameObject coupling", () => {
         chai.assert.strictEqual(childWithParent.parent.children.length, 1);
         chai.assert.strictEqual(childWithParent.parent.children[0].tag, childWithParent.tag);
         chai.assert.strictEqual(childWithParent.parent.tag, "kek");
+    });
+    it("Can't modify children directly", () => {
+        let children = childWithParent.parent.children;
+        chai.assert.strictEqual(children.length, 1);
+        chai.assert.strictEqual(childWithParent.parent.children.length, 1);
+        children.push(new GameObject());
+        chai.assert.strictEqual(children.length, 2);
+        chai.assert.strictEqual(childWithParent.parent.children.length, 1);
+    });
+});
+
+describe("GameObject position locking", () => {
+    let child = new GameObject({tag: "child"});
+    let parent = new GameObject({tag: "parent", children: [child]});
+    let newobj = new GameObject();
+
+    it("Position lock is set", () => {
+        chai.assert.strictEqual(child.positionLock, parent);
+    });
+    it("Can change position lock", () => {
+        child.positionLock = newobj;
+        chai.assert.strictEqual(child.positionLock, newobj);
+    });
+    it("Can change position lock to null", () => {
+        child.positionLock = null;
+        chai.assert.strictEqual(child.positionLock, null);
+    });
+    it("Setting parent does not affect custom position lock", () => {
+        child.positionLock = newobj;
+        child.parent = parent;
+        chai.assert.strictEqual(child.positionLock, newobj);
+        chai.assert.strictEqual(child.parent, parent);
+    });
+    it("Setting parent does affect default position lock", () => {
+        child.positionLock = newobj;
+        child.parent = parent;
+        chai.assert.strictEqual(child.positionLock, newobj);
+        chai.assert.strictEqual(child.parent, parent);
     });
 });

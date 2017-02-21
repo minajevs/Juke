@@ -21,8 +21,6 @@ export default class Player extends Juke.GameObject{
         if (kb.isDown(Juke.Keyboard.LEFT))     this.move(-5, true);
         if (kb.isDown(Juke.Keyboard.SPACE))    console.log(this);
 
-        this.collider.pos = this.pos;
-        this.sprite.pos = this.pos;
         Juke.Events.emit("player:update", this);
     }
 

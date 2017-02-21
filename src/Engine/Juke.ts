@@ -7,6 +7,7 @@ import Events from "./Core/Events";
 import GameObject, {IGameObjectOptions} from "./Physics/GameObject";
 import Vector from "./Physics/Vector";
 import Rect from "./Physics/Rect";
+import {Roles} from "./Physics/GameObject";
 //Controls
 import Keyboard from "./Controls/Keyboard";
 //Resources
@@ -23,9 +24,9 @@ export default {Core};
 
 export {
     //Core
-    Core, Objects, Tick, Events,
+    Core, Objects, Tick, Events, 
     //Physics
-    Vector, Rect, GameObject, IGameObjectOptions,
+    Vector, Rect, GameObject, IGameObjectOptions, Roles,
     //Controls
     Keyboard,
     //Resources

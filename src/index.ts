@@ -1,8 +1,6 @@
 import TestGameObject from "./TestGameObject";
 import Player from "./Objects/Player";
-import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Spritesheet, Events } from "./Engine/Juke";
-
-
+import Juke, { Vector, Rect, Resources, ImageResource, Sprite, GameObject, Spritesheet, Events, Roles } from "./Engine/Juke";
 
 let a = new Juke.Core({ debug: true });
 a.resources.add(new ImageResource({ src: "../Assets/pika.png", name: "pikachu" }));
@@ -20,7 +18,7 @@ let player = new Player({
     sprite: new Sprite({ src: a.resources.getByName("pikachu") }),
     renderable: true,
     layer: 1,
-    collider: true
+    collide: true
 });
 
 a.add(player);
@@ -39,7 +37,8 @@ a.add(new GameObject({
     sprite: new Sprite({ src: a.resources.getByName("barrel") }),
     renderable: true,
     layer: 1,
-    collider: new Rect({ pos: new Vector(300, 300), w: 62, h: 100 })
+    children: [new GameObject({ pos: new Vector(300, 300), w: 62, h: 100, role: Roles.collider })]
+    //children: 
 }));
 
 a.init().then(res => {
@@ -49,6 +48,6 @@ a.init().then(res => {
         h: 150,
         sprite: sheet.getSpriteByName("house1"),
         renderable: true,
-        collider: true
+        collide: true
     }));
 });

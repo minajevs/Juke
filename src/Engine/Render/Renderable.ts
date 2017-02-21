@@ -1,4 +1,5 @@
 import Rect, {IRectOptions} from "../Physics/Rect";
+import GameObject from "../Physics/GameObject";
 import Tools from "../Tools/Tools";
 
 export interface IRenderableOptions extends IRectOptions{
@@ -6,7 +7,7 @@ export interface IRenderableOptions extends IRectOptions{
     scale?: number;
 }
 
-export default class Renderable extends Rect{
+export default class Renderable extends GameObject{
     visible: boolean = true;
     scale: number = 1;
 

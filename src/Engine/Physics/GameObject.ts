@@ -13,39 +13,60 @@ export enum EnumLayer {
     special = 4
 }
 
+export enum Roles {
+    default = 0,
+    collider = 1,
+    sprite = 2,
+}
+
 export interface IGameObjectOptions extends IRectOptions {
     tag?: string;
+    role?: Roles;
     renderable?: boolean;
     sprite?: Sprite;
     layer?: EnumLayer;
-    collider?: Rect | boolean;
     children?: Array<GameObject>;
     parent?: GameObject;
+    collide?: boolean;
 }
 
 export default class GameObject extends Rect {
     tag: string = undefined;
+    role: Roles = Roles.default;
     renderable: boolean = false;
     sprite: Sprite; //TODO: add some default sprite
     layer: EnumLayer = 0;
-    collider: Rect;
-    private _children: Array<GameObject> = [];
-    get children():Array<GameObject>{return this._children.slice()}//returns copy to avoid data corruption!!!!
-    set children(value:Array<GameObject>){
-        if(this._children == null) this._children = []; //strange behavior, but we need this. either way compilator errors appear
-        for(let obj of value)
+    get colliders(): GameObject[] {
+        return this._children[Roles.collider];
+    };
+
+    private _children: { [role: number]: Array<GameObject> } = {};
+    get children(): Array<GameObject> {
+        let ret:Array<GameObject> = [];
+        for (let role in Roles){
+            ret = ret.concat(this._children[role]);
+        }
+        return ret;
+    }
+    set children(value: Array<GameObject>) {
+        for (let obj of value)
             this.addChild(obj);
     }
 
     private _parent: GameObject;
-    get parent():GameObject {return this._parent;}
-    set parent(value:GameObject) {
-        if(this.parent != null)
-            this.parent.removeChild(this);
-        
-        if(value != null)
+    get parent(): GameObject { return this._parent; }
+    set parent(value: GameObject) {
+        let parent = this._parent;
+        if (this._parent != null)
+            this._parent.removeChild(this);
+
+        if (value != null) {
             value.addChild(this);
+            if (this.positionLock == parent) this.positionLock = value;
+        }
     }
+
+    positionLock: GameObject;
 
     private _nearObjects: [Array<GameObject>, number] = [[], 0]; //Objectlist , last update tick
     get nearObjects(): Array<GameObject> {
@@ -59,36 +80,49 @@ export default class GameObject extends Rect {
     constructor(options?: IGameObjectOptions) {
         super(options);
         Tools.extend(this, options);
-        if (options && options.collider != null && typeof options.collider === "boolean") {
-            this.collider = options.collider
-                ? new Rect({ pos: this.pos, w: this.w, h: this.h })
-                : undefined;
+        if (options && options.collide) {
+            this.addChild(new GameObject({ pos: this.pos, w: this.w, h: this.h, role: Roles.collider }));
         }
         if (this.sprite) {
             this.sprite.pos = this.pos;
             this.sprite.w = this.w;
             this.sprite.h = this.h;
         }
+        if (options && options.children) {
+            for (let child of options.children)
+                this.addChild(child);
+        }
+        if (this.sprite) this.sprite.parent = this;
+        this.positionLock = this.parent;
+
+        for(let role in Roles)
+            if(this._children[role] == null) this._children[role] = []
     }
 
     update(tick: Tick) {
         this.tick = tick;
+        if (this.positionLock != null) this.pos = this.positionLock.pos;
+        for (let role in Roles)
+            for (let obj of this._children[role])
+                obj.update(tick);
+
     }
 
     addChild(object: GameObject) {
-        if (this._children.indexOf(object) > -1) return;
+        if (this._children[object.role] == null) this._children[object.role] = new Array<GameObject>();
+        if (this._children[object.role].indexOf(object) > -1) return;
 
-        this._children.push(object);
+        if (object.positionLock == object.parent) object.positionLock = this;
+        this._children[object.role].push(object);
         object._parent = this;
     }
 
     removeChild(object: GameObject) {
-        let index = this._children.indexOf(object);
-        if (index <= -1) return;
-
+        if (this._children[object.role] == null || this._children[object.role].indexOf(object) == -1) return;
+        let index = this._children[object.role].indexOf(object);
+        if (object._parent == this.positionLock) this.positionLock = null;
         object._parent = null;
-        this._children.splice(index, 1);
-
+        this._children[object.role].splice(index, 1);
     }
 
     getRect(): Rect {
@@ -96,16 +130,19 @@ export default class GameObject extends Rect {
     }
 
     collides(object?: GameObject): boolean {
-        if (this.collider == null || this.tick == null) return false;
+        console.log('collides');
+        
+        let colliders = this.colliders;
+        if (colliders.length < 1 || this.tick == null) return false;
 
         if (object != null) {
-            return object.collider == null
+            return object.colliders.length < 1
                 ? false
-                : this.collider.intersects(object.collider);
+                : colliders.some(x => object.colliders.some(y => x.intersects(y)))
         } else {
             for (let obj of this.nearObjects) {
                 if (obj === this) continue;
-                if (this.collider.intersects(obj.collider)) {
+                if (colliders.some(x => obj.colliders.some(y => x.intersects(y)))) {
                     return true;
                 }
             }
@@ -117,8 +154,9 @@ export default class GameObject extends Rect {
         let ret = new Array<GameObject>();
         for (let obj of this.nearObjects) {
             if (obj === this) continue;
-            if (this.collider.intersects(obj.collider)) {
-                ret.push(obj);
+            for (let collider of this.colliders) {
+                if (obj.colliders.some(collider2 => collider2.intersects(collider)))
+                    ret.push(obj);
             }
         }
         return ret;
