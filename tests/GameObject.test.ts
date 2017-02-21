@@ -18,7 +18,7 @@ describe("Test GameObject", () => {
         pos: new Vector(100, 200),
         w: 111,
         h: 222,
-        collides: true
+        collide: true
     });
     let objectWithOutColliderBoolean = new GameObject({
         pos: new Vector(100, 200),
@@ -29,7 +29,7 @@ describe("Test GameObject", () => {
         pos: new Vector(100, 200),
         w: 111,
         h: 222,
-        collides: false
+        collide: false
     });
     it("Pos is set", () => {
         chai.assert.strictEqual(object.pos.x, 22);

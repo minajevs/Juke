@@ -130,8 +130,6 @@ export default class GameObject extends Rect {
     }
 
     collides(object?: GameObject): boolean {
-        console.log('collides');
-        
         let colliders = this.colliders;
         if (colliders.length < 1 || this.tick == null) return false;
 
