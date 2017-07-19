@@ -10,16 +10,30 @@ export interface ISpatialMapOptions {
     cellsize?: number;
 }
 
+/** Implementation of spatial map which allows quickly traverse and search objects on a 2D pane.   */
 export default class SpatialMap {
+    /** Maximum width of the map */
     w: number;
+    
+    /** Maximum height of the map */
     h: number;
+
+    /** How big cells on a spatial map must be */
     cellsize: number;
+
+    /** All the objects located on a map */
     objects: Array<GameObject> = [];
 
-    private colCount: number;
-    private rowCount: number;
+    /** Of how many columns spatial map is made */
+    private readonly colCount: number;
+
+    /** Of how many rows spatial map is made */
+    private readonly rowCount: number;
+
+    /** Spatial map cells */
     private buckets: { [id: number]: Array<GameObject> } = {};
 
+    /** Creates new spatial map */
     constructor(options?: ISpatialMapOptions) {
         Tools.extend(this, options);
         this.colCount = this.w / this.cellsize;
@@ -27,7 +41,7 @@ export default class SpatialMap {
         this.clear();
     }
 
-
+    /** Adds an object to the map */
     public add(object: GameObject) {
         if (object.colliders.length < 1) return;
 
@@ -40,6 +54,8 @@ export default class SpatialMap {
         }
     }
 
+    /** Finds nearby objects of an object
+     * @returns Array of nearby objects */
     public getNearby(object: GameObject): Array<GameObject> {
         if (object.colliders.length < 1) return null;
         let ret = new Array<GameObject>();
@@ -53,7 +69,7 @@ export default class SpatialMap {
         return ret;
     }
 
-
+    /** Removes all objects from the map, recreates buckets  */
     private clear(): void {
         this.buckets = {};
         for (let i = 0; i < this.colCount * this.rowCount; i++) {
@@ -61,6 +77,10 @@ export default class SpatialMap {
         }
     }
 
+    /** Gets buckets for coordinates on the map 
+     * @param rect Rectangular coordinates
+     * @returns Array of bucket IDs
+    */
     private getBucketIds(rect: Rect): Array<number> {
         let buckets = [];
         let temp = [
@@ -76,6 +96,9 @@ export default class SpatialMap {
         return buckets;
     }
 
+    /** Gets bucket for a point on the map 
+     * @returns bucket ID
+    */
     private getBucketId(pos: Vector): number {
         let cellPos = (Math.floor(pos.x / this.cellsize)) +
             (Math.floor(pos.y / this.cellsize)) *
