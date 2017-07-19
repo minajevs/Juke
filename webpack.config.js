@@ -1,4 +1,5 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 module.exports = {
     entry: "./src/index.ts",
@@ -9,7 +10,14 @@ module.exports = {
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
     //Ebable HTML generation
-    plugins: [new HtmlWebpackPlugin()],
+    plugins: [
+        new HtmlWebpackPlugin(),
+        //new TypedocWebpackPlugin({
+        //    out: './docs',
+        //    target: 'es6',
+        //    theme: 'minimal'
+        //}, './src')
+    ],
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]

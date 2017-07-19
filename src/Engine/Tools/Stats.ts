@@ -24,7 +24,7 @@ var Stats = function () {
 
 	function showPanel( id ) {
 		for ( var i = 0; i < container.children.length; i ++ ) {
-			container.children[i].style.display = i === id ? 'block' : 'none';
+			(container.children[i] as any).style.display = i === id ? 'block' : 'none';
 		}
 
 		mode = id;
@@ -35,12 +35,12 @@ var Stats = function () {
 
 	var beginTime = ( performance || Date ).now(), prevTime = beginTime, frames = 0;
 
-	var fpsPanel = addPanel( new Stats.Panel( 'FPS', '#0ff', '#002' ) );
-	var msPanel = addPanel( new Stats.Panel( 'MS', '#0f0', '#020' ) );
+	var fpsPanel = addPanel( new (Stats as any).Panel( 'FPS', '#0ff', '#002' ) );
+	var msPanel = addPanel( new (Stats as any).Panel( 'MS', '#0f0', '#020' ) );
 
-	if ( self.performance && self.performance.memory ) {
+	if ( self.performance && (self.performance as any).memory ) {
 
-		var memPanel = addPanel( new Stats.Panel( 'MB', '#f08', '#201' ) );
+		var memPanel = addPanel( new (Stats as any).Panel( 'MB', '#f08', '#201' ) );
 
 	}
 
@@ -78,7 +78,7 @@ var Stats = function () {
 
 				if ( memPanel ) {
 
-					var memory = performance.memory;
+					var memory = (performance as any).memory;
 					memPanel.update( memory.usedJSHeapSize / 1048576, memory.jsHeapSizeLimit / 1048576 );
 
 				}
@@ -104,7 +104,7 @@ var Stats = function () {
 
 };
 
-Stats.Panel = function ( name, fg, bg ) {
+(Stats as any).Panel = function ( name, fg, bg ) {
 
 	var min = Infinity, max = 0, round = Math.round;
 	var PR = round( window.devicePixelRatio || 1 );
