@@ -8,58 +8,28 @@ export interface IRectOptions{
     pos2?: Vector;
 }
 
-/**
- * Base geometric class. Represents 2d rectangular with vector position and 2 dimensions (width, height)
- * @export
- * @class Rect
- */
+/** Base geometric class. Represents 2d rectangular with vector position and 2 dimensions (width, height) */
 export default class Rect{
-    /**
-     * Width
-     * @type {number}
-     * @memberof Rect
-     */
+    /** Width */
     w: number = 0;
 
-    /**
-     * Height
-     * @type {number}
-     * @memberof Rect
-     */
+    /** Height */
     h: number = 0;
 
-    /**
-     * Top-left corner position of rectangular
-     * @type {Vector}
-     * @memberof Rect
-     */
+    /** Top-left corner position of rectangular */
     pos: Vector = new Vector(0, 0);
-    //Bottom-right coordinates
 
-    /**
-     * Right-bottom position of rectangular
-     * @type {Vector}
-     * @memberof Rect
-     */
+    /** Bottom-right position of rectangular */
     get pos2(): Vector {return Vector._plus(this.pos, new Vector(this.w, this.h)); }
     set pos2(value: Vector){
         this.w = value.x - this.pos.x;
         this.h = value.y - this.pos.y;
     }
 
-    /**
-     * Rectangular area
-     * @readonly
-     * @type {number}
-     * @memberof Rect
-     */
+    /** Rectangular area */
     get area(): number {return (this.pos2.x - this.pos.x) * (this.pos2.y - this.pos.y); }
 
-    /**
-     * Center of rectangular
-     * @type {Vector}
-     * @memberof Rect
-     */
+    /** Center point of rectangular */
     get center(): Vector {return Vector._plus(this.pos, new Vector(this.w / 2, this.h / 2)); }
     set center(value: Vector) {this.pos.x = value.x - (this.w / 2); this.pos.y = value.y - (this.h / 2); }
 
@@ -67,12 +37,7 @@ export default class Rect{
         Tools.extend(this, options);
     }
 
-    /**
-     * Tells if rectangular intersects with provided rectangular
-     * @param {Rect} rect 
-     * @returns {boolean} 
-     * @memberof Rect
-     */
+    /** Tells if rectangular intersects with provided rectangular */
     intersects(rect: Rect): boolean{
         return !(this.pos.x > rect.pos2.x ||
                 this.pos2.x < rect.pos.x ||

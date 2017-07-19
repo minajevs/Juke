@@ -11,6 +11,8 @@ Events.subscribe("player:update", (player:GameObject) => {
     a.camera.center = player.center;
 });
 
+let test = new GameObject();
+
 let player = new Player({
     pos: new Vector(100, 100),
     w: 100,
