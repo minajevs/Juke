@@ -48,7 +48,7 @@ describe("Test GameObject", () => {
     });
     it("Layer is set", () => {
         chai.assert.strictEqual(object.layer, 3);
-        chai.assert.strictEqual(object.layer, EnumLayer.foreground);
+        chai.assert.strictEqual(object.layer, Layer.foreground);
     });
     it("Renderability is set", () => {
         chai.assert.isTrue(object.renderable);
