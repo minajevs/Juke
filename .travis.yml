@@ -2,6 +2,6 @@ language: node_js
 node_js: node
 skip_cleanup: true
 before_script:
-    - npm install webpack-dev-server@2.1.0-beta.8
-    - npm install webpack@2.1.0-beta.22
+    - npm install webpack-dev-server@^2.1.0-beta.8
+    - npm install webpack@^3.3.0
     
