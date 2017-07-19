@@ -1,5 +1,5 @@
 import Objects from '../src/Engine/Core/Objects';
-import GameObject, {EnumLayer} from '../src/Engine/Physics/GameObject';
+import GameObject, {Layer} from '../src/Engine/Physics/GameObject';
 
 
 describe("Test Objects constructor", () => {

@@ -1,13 +1,13 @@
-import GameObject, {EnumLayer} from "../Physics/GameObject";
+import GameObject, {Layer} from "../Physics/GameObject";
 
 export default class Objects{
     objects: Array<Array<GameObject>> = [];
     layerCount: number = 0;
 
     constructor(){
-        for (let num in EnumLayer){
-            if (typeof EnumLayer[num] === "number") {
-                this.objects[+EnumLayer[num]] = new Array<GameObject>();
+        for (let num in Layer){
+            if (typeof Layer[num] === "number") {
+                this.objects[+Layer[num]] = new Array<GameObject>();
                 this.layerCount++;
             }
         }
@@ -17,11 +17,11 @@ export default class Objects{
         this.objects[obj.layer].push(obj);
     }
 
-    public length(layer?: EnumLayer): number{
+    public length(layer?: Layer): number{
         return this.objects[layer].length;
     }
 
-    public get(layer?: EnumLayer): Array<GameObject>{
+    public get(layer?: Layer): Array<GameObject>{
         if (layer != null && this.objects[layer] != null){
             return this.objects[layer];
         } else {

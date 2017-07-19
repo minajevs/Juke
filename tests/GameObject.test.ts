@@ -1,4 +1,4 @@
-import GameObject, { EnumLayer, Roles } from "../src/Engine/Physics/GameObject";
+import GameObject, { Layer, Roles } from "../src/Engine/Physics/GameObject";
 import Vector from "../src/Engine/Physics/Vector";
 import Rect from "../src/Engine/Physics/Rect";
 
