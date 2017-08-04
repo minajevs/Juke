@@ -1,11 +1,12 @@
 import { IResource } from "./Resource";
 import Tools from "../Tools/Tools";
+import IResources from './IResources';
 
 interface IResourcesOptions {
     name?: string;
 }
 
-export default class Resources {
+export default class Resources implements IResources {
     private _resources: Array<IResource> = [];
     name: string;
 
@@ -26,20 +27,24 @@ export default class Resources {
         }
     }
 
-    public async loadAll(progressCallback: (count:number) => any = function(){}){
+    /** Loads all resources
+     * @param callback Called after every resource is loaded with count of loaded resources 
+     */
+    public async load(callback: (count:number) => any = ()=>{}){
         let loaded = 0;
         for (let res of this._resources){
             if (!res.loaded)
                 await res.load(this);
-            progressCallback(++loaded);
+            callback(++loaded);
         }
     }
 
-    public length(){
+    public length():number{
         return this._resources.length;
     }
 
-    public getByName(name: string): IResource{
+    /** Finds resource by name */
+    public get(name: string): IResource{
         return this._resources.find(x => x.name === name);
     }
 

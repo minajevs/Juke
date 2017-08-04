@@ -1,5 +1,7 @@
 import Tools from "../Tools/Tools";
 import GameObject, { IGameObjectOptions } from "../Physics/GameObject";
+import IGameObject from '../Physics/IGameObject';
+import {Roles} from '../Physics/Enums';
 import Render, { IDebugOptions } from "../Render/Render";
 import Vector from "../Physics/Vector";
 import Rect from "../Physics/Rect";
@@ -22,6 +24,7 @@ export default class Camera extends GameObject {
     constructor(options?: ICameraOptions) {
         super(options);
         this.tag = "camera";
+        this.role = Roles.camera;
         Tools.extend(this, options);
         this.renderer = this.renderer || new Render({ h: this.h, w: this.w });
     }
@@ -32,14 +35,14 @@ export default class Camera extends GameObject {
         this.renderer.clear();
     }
 
-    updateObject(tick: Tick, object: GameObject) {
+    updateObject(tick: Tick, object: IGameObject) {
         if (this.lastUpdate != tick.tick) {
             this.update(tick);
         }
         this.render(object);
     }
 
-    render(object: GameObject) {
+    render(object: IGameObject) {
         if (object.renderable && object.sprite && object.sprite.visible && this.objectInView(object)) {
             let drawRect = new Rect({ pos: Vector._minus(object.sprite.pos, this.pos), w: object.sprite.w, h: object.sprite.h });
             this.renderer.drawImage(object.sprite.src, drawRect, object.sprite.offset);
@@ -68,7 +71,7 @@ export default class Camera extends GameObject {
         }
     }
 
-    private objectInView(object: GameObject): boolean {
+    private objectInView(object: IGameObject): boolean {
         return this.intersects(object);
     }
 }

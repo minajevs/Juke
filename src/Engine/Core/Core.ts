@@ -1,9 +1,15 @@
+import IResources from "./../Resources/IResources";
 import Resources from "./../Resources/Resources";
+
 import udpate from "../Render/Render";
 import Tools from "../Tools/Tools";
 import * as _Stats from "../Tools/Stats";
 import Camera from "../Render/Camera";
-import GameObject from "../Physics/GameObject";
+
+import IGameObject from "../Physics/IGameObject";
+import {Roles} from '../Physics/Enums';
+
+
 import Vector from "../Physics/Vector";
 import Keyboard from "../Controls/Keyboard";
 import ImageResource from "../Resources/ImageResource";
@@ -12,19 +18,23 @@ import SpatialMap from "../Physics/SpatialMap";
 import Tick from "./Tick";
 import Events from "./Events";
 
+import ICore from './ICore';
+
 
 interface ICoreOptions {
     ctx?: CanvasRenderingContext2D;
     tickLength?: number;
     fps?: number;
     debug?: boolean;
-    camera?: Camera;
     spatialMap?: SpatialMap;
     w?: number;
     h?: number;
+    gameObjects?: Array<IGameObject>;
 }
 
-export default class Core {
+/** Main game engine object. Core corresponds to a game (1 game -> 1 core). 
+ * Does all the game magic, connects all the parts (rendering, ticks, game loop, (pre)loading) */
+export default class Core implements ICore {
     private options: ICoreOptions = { fps: 60 };
     private fpsInterval: number;
     private lastTick: number;
@@ -33,16 +43,22 @@ export default class Core {
     private requestId: number;
     private objects: Objects = new Objects();
     private stats: Stats;
+    private camera: Camera = new Camera({ pos: new Vector(0, 0), w: 800, h: 600 });
 
     debug: boolean = false;
-    resources: Resources = new Resources();
-    camera: Camera = new Camera({ pos: new Vector(0, 0), w: 800, h: 600 });
+    resources: IResources = new Resources();
     keyboard: Keyboard;
     spatialMap: SpatialMap = new SpatialMap({ w: 10000, h: 10000, cellsize: 500 });
 
     constructor(options?: ICoreOptions) {
         Tools.extend(this.options, options);
         Tools.extend(this, options);
+
+        if(this.options.gameObjects != null){
+            for(let obj of this.options.gameObjects){
+                this.add(obj);
+            }
+        }
 
         Keyboard.initialize([Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.SPACE]);
 
@@ -70,7 +86,10 @@ export default class Core {
         }
     }
 
-    public add(obj: GameObject): void {
+    public add(obj: IGameObject): void {
+        if(obj.role == Roles.camera && obj instanceof Camera){
+            this.camera = obj;
+        }
         this.objects.add(obj);
         this.spatialMap.add(obj);
     }
@@ -82,7 +101,7 @@ export default class Core {
 
         console.log("Started loading game!");
         let start = Date.now();
-        await this.resources.loadAll(count => {
+        await this.resources.load(count => {
             if(this.debug) console.log((100*count/this.resources.length()).toFixed(0) + "%");
         });
         this.start();

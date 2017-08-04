@@ -1,5 +1,6 @@
 import Vector from "./Vector";
 import Tools from "../Tools/Tools";
+import IRect from './IRect';
 
 export interface IRectOptions{
     w?: number;
@@ -9,7 +10,7 @@ export interface IRectOptions{
 }
 
 /** Base geometric class. Represents 2d rectangular with vector position and 2 dimensions (width, height) */
-export default class Rect{
+export default class Rect implements IRect{
     /** Width */
     w: number = 0;
 

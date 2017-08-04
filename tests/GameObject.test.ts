@@ -1,4 +1,5 @@
-import GameObject, { Layer, Roles } from "../src/Engine/Physics/GameObject";
+import GameObject from "../src/Engine/Physics/GameObject";
+import { Layer, Roles } from '../src/Engine/Physics/Enums';
 import Vector from "../src/Engine/Physics/Vector";
 import Rect from "../src/Engine/Physics/Rect";
 
@@ -101,11 +102,6 @@ describe("Test GameObject", () => {
 })
 
 describe("GameObject coupling", () => {
-    let child = new GameObject({ tag: "123" });
-    let childWithParent = new GameObject({ tag: "parent!", parent: child });
-
-
-    let obj = new GameObject();
     let objWithChildren = new GameObject({
         children: [
             new GameObject({ tag: "test" }),
@@ -115,14 +111,17 @@ describe("GameObject coupling", () => {
 
     //Constructors default
     it("Default children is empty", () => {
+        let obj = new GameObject();
         chai.assert.isNotNull(obj.children);
     });
     it("Default parent is empty", () => {
+        let obj = new GameObject();
         chai.assert.isNotNull(obj.parent);
     });
     //Constructors custom
     it("Custom children in constructor are set", () => {
-        console.log(objWithChildren.children);
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
         chai.assert.isNotNull(objWithChildren.children);
         chai.assert.strictEqual(objWithChildren.children.length, 2);
         chai.assert.strictEqual(objWithChildren.children[0].tag, "test");
@@ -131,6 +130,8 @@ describe("GameObject coupling", () => {
         chai.assert.strictEqual(objWithChildren.children[0].positionLock, objWithChildren);
     });
     it("Custom parent in constructor is set", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
         chai.assert.isNotNull(childWithParent.parent);
         chai.assert.strictEqual(childWithParent.parent.children.length, 1);
         chai.assert.strictEqual(childWithParent.parent.tag, "123");
@@ -139,34 +140,50 @@ describe("GameObject coupling", () => {
     });
     //Add
     it("Can add parent", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
+        let obj = new GameObject();
         obj.parent = child;
         chai.assert.strictEqual(obj.parent, child);
         chai.assert.strictEqual(child.children.length, 2);
     });
     it("Can add child", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
+        let obj = new GameObject();
         obj.addChild(child);
         chai.assert.strictEqual(obj.children.length, 1);
         chai.assert.strictEqual(obj.children[0].tag, "123");
     });
     //Remove
     it("Can remove parent", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
+        let obj = new GameObject();
         obj.parent = null;
         chai.assert.strictEqual(child.children.length, 1);
         chai.assert.isNull(obj.parent);
     });
     it("Can remove child", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
+        let obj = new GameObject();
         obj.removeChild(child);
         chai.assert.strictEqual(obj.children.length, 0);
     });
 
     //Change
     it("Can change parent", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
         childWithParent.parent = new GameObject({tag: "kek"})
         chai.assert.strictEqual(childWithParent.parent.children.length, 1);
         chai.assert.strictEqual(childWithParent.parent.children[0].tag, childWithParent.tag);
         chai.assert.strictEqual(childWithParent.parent.tag, "kek");
     });
     it("Can't modify children directly", () => {
+        let child = new GameObject({ tag: "123" });
+        let childWithParent = new GameObject({ tag: "parent!", parent: child });
         let children = childWithParent.parent.children;
         chai.assert.strictEqual(children.length, 1);
         chai.assert.strictEqual(childWithParent.parent.children.length, 1);

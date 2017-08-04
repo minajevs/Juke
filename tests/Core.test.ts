@@ -15,8 +15,8 @@ describe("Test default Core constructor", () => {
         chai.assert.instanceOf(core.resources, Resources);
     });
     it("Camera is set up", () => {    
-        chai.assert.isNotNull(core.camera);
-        chai.assert.instanceOf(core.camera, Camera);        
+        chai.assert.isNotNull((core as any).camera);
+        chai.assert.instanceOf((core as any).camera, Camera);        
     });
     it("Keyboard is set up", () => {    
         chai.assert.isNotNull(Keyboard);
@@ -35,13 +35,13 @@ describe("Test custom Core constructors", () => {
     let emptyOptionsAndEmptyCameraCore = new Core(undefined);
     let customConstructor = new Core({
         debug: true, 
-        camera: new Camera({pos: new Vector(11, 12), w: 100, h:200}),
+        gameObjects: [new Camera({pos: new Vector(11, 12), w: 100, h:200})],
         spatialMap: new SpatialMap({w: 100, h: 200, cellsize:25})
     });
     let defaultCore = new Core();
     it("Empty camera is set up", () => {
-        chai.assert.isNotNull(emptyOptionsAndEmptyCameraCore.camera); 
-        chai.assert.instanceOf(emptyOptionsAndEmptyCameraCore.camera, Camera);   
+        chai.assert.isNotNull((emptyOptionsAndEmptyCameraCore as any).camera); 
+        chai.assert.instanceOf((emptyOptionsAndEmptyCameraCore as any).camera, Camera);   
     });
     it("Empty options is set up", () => {
         chai.assert.isFalse(emptyOptionsAndEmptyCameraCore.debug); 
@@ -57,12 +57,12 @@ describe("Test custom Core constructors", () => {
         chai.assert.strictEqual(customConstructor.spatialMap.cellsize, 25); 
     });
     it("Custom camera is set up", () => {
-        chai.assert.isNotNull(customConstructor.camera); 
-        chai.assert.instanceOf(customConstructor.camera, Camera);   
-        chai.assert.strictEqual(customConstructor.camera.pos.x, 11);
-        chai.assert.strictEqual(customConstructor.camera.pos.y, 12);
-        chai.assert.strictEqual(customConstructor.camera.w, 100);
-        chai.assert.strictEqual(customConstructor.camera.h, 200);
+        chai.assert.isNotNull((customConstructor as any).camera); 
+        chai.assert.instanceOf((customConstructor as any).camera, Camera);   
+        chai.assert.strictEqual((customConstructor as any).camera.pos.x, 11);
+        chai.assert.strictEqual((customConstructor as any).camera.pos.y, 12);
+        chai.assert.strictEqual((customConstructor as any).camera.w, 100);
+        chai.assert.strictEqual((customConstructor as any).camera.h, 200);
     });
 })
 
@@ -70,8 +70,8 @@ describe("Test Core options", () => {
     let emptyOptionsAndEmptyCameraCore = new Core(undefined);
     let defaultCore = new Core();
     it("Empty camera Core is set up", () => {
-        chai.assert.isNotNull(emptyOptionsAndEmptyCameraCore.camera); 
-        chai.assert.instanceOf(emptyOptionsAndEmptyCameraCore.camera, Camera);   
+        chai.assert.isNotNull((emptyOptionsAndEmptyCameraCore as any).camera); 
+        chai.assert.instanceOf((emptyOptionsAndEmptyCameraCore as any).camera, Camera);   
     });
     it("Empty options Core is set up", () => {
         chai.assert.isFalse(emptyOptionsAndEmptyCameraCore.debug); 

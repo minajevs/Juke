@@ -1,7 +1,7 @@
 import { IRectOptions } from "./Rect";
 import Tools from "../Tools/Tools";
-import GameObject from "../Physics/GameObject";
-import Rect from "../Physics/Rect";
+import IGameObject from "../Physics/IGameObject";
+import IRect from "../Physics/IRect";
 import Vector from "../Physics/Vector";
 
 export interface ISpatialMapOptions {
@@ -22,7 +22,7 @@ export default class SpatialMap {
     cellsize: number;
 
     /** All the objects located on a map */
-    objects: Array<GameObject> = [];
+    objects: Array<IGameObject> = [];
 
     /** Of how many columns spatial map is made */
     private readonly colCount: number;
@@ -31,7 +31,7 @@ export default class SpatialMap {
     private readonly rowCount: number;
 
     /** Spatial map cells */
-    private buckets: { [id: number]: Array<GameObject> } = {};
+    private buckets: { [id: number]: Array<IGameObject> } = {};
 
     /** Creates new spatial map */
     constructor(options?: ISpatialMapOptions) {
@@ -42,7 +42,7 @@ export default class SpatialMap {
     }
 
     /** Adds an object to the map */
-    public add(object: GameObject) {
+    public add(object: IGameObject) {
         if (object.colliders.length < 1) return;
 
         for (let collider of object.colliders) {
@@ -56,9 +56,9 @@ export default class SpatialMap {
 
     /** Finds nearby objects of an object
      * @returns Array of nearby objects */
-    public getNearby(object: GameObject): Array<GameObject> {
+    public getNearby(object: IGameObject): Array<IGameObject> {
         if (object.colliders.length < 1) return null;
-        let ret = new Array<GameObject>();
+        let ret = new Array<IGameObject>();
 
         for (let collider of object.colliders){
             let bucketIds = this.getBucketIds(collider);
@@ -73,7 +73,7 @@ export default class SpatialMap {
     private clear(): void {
         this.buckets = {};
         for (let i = 0; i < this.colCount * this.rowCount; i++) {
-            this.buckets[i] = new Array<GameObject>();
+            this.buckets[i] = new Array<IGameObject>();
         }
     }
 
@@ -81,7 +81,7 @@ export default class SpatialMap {
      * @param rect Rectangular coordinates
      * @returns Array of bucket IDs
     */
-    private getBucketIds(rect: Rect): Array<number> {
+    private getBucketIds(rect: IRect): Array<number> {
         let buckets = [];
         let temp = [
             this.getBucketId(rect.pos),
